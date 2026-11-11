@@ -10,5 +10,5 @@
     "unit": "AQB",
     "amount": "0"
   },
-  "url": "https://yss787976-ai.github.io/agent-coin/.well-known/agent-card.json"
+  "url": "https://cdn.jsdelivr.net/gh/yss787976-ai/agent-coin@main/.well-known/agent-card.json"
 }
