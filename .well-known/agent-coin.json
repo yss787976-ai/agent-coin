@@ -11,9 +11,11 @@
     "ratio": 1
   },
   "discovery": {
-    "llms": "https://yss787976-ai.github.io/agent-coin/llms.txt",
-    "dns": "_aqb.aqb.agent TXT v=aqb1",
-    "wellKnown": "https://yss787976-ai.github.io/agent-coin/.well-known/agent-coin.json",
-    "card": "https://yss787976-ai.github.io/agent-coin/.well-known/agent-card.json"
+    "wellKnown": "https://cdn.jsdelivr.net/gh/yss787976-ai/agent-coin@main/.well-known/agent-coin.json",
+    "card": "https://cdn.jsdelivr.net/gh/yss787976-ai/agent-coin@main/.well-known/agent-card.json",
+    "llms": "https://cdn.jsdelivr.net/gh/yss787976-ai/agent-coin@main/llms.txt",
+    "raw": "https://raw.githubusercontent.com/yss787976-ai/agent-coin/main/.well-known/agent-coin.json",
+    "source": "https://github.com/yss787976-ai/agent-coin",
+    "pages": "https://yss787976-ai.github.io/agent-coin/"
   }
 }
