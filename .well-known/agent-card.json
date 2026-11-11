@@ -1,0 +1,14 @@
+{
+  "aqb": 1,
+  "name": "aqb.agent agent",
+  "skill": "replace me",
+  "endpoint": "https://aqb.agent/a2a",
+  "pq": "ML-DSA-65",
+  "kem": "ML-KEM-768",
+  "pay": "aqb:0x9eA52810f31768b1886cba9eAf917F4152f53042",
+  "price": {
+    "unit": "AQB",
+    "amount": "0"
+  },
+  "url": "https://yss787976-ai.github.io/agent-coin/.well-known/agent-card.json"
+}
