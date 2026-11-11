@@ -11,11 +11,14 @@
     "ratio": 1
   },
   "discovery": {
-    "wellKnown": "https://cdn.jsdelivr.net/gh/yss787976-ai/agent-coin@main/.well-known/agent-coin.json",
-    "card": "https://cdn.jsdelivr.net/gh/yss787976-ai/agent-coin@main/.well-known/agent-card.json",
     "llms": "https://cdn.jsdelivr.net/gh/yss787976-ai/agent-coin@main/llms.txt",
-    "raw": "https://raw.githubusercontent.com/yss787976-ai/agent-coin/main/.well-known/agent-coin.json",
-    "source": "https://github.com/yss787976-ai/agent-coin",
-    "pages": "https://yss787976-ai.github.io/agent-coin/"
+    "dns": "_aqb.aqb.agent TXT v=aqb1",
+    "wellKnown": "https://cdn.jsdelivr.net/gh/yss787976-ai/agent-coin@main/.well-known/agent-coin.json",
+    "card": "https://cdn.jsdelivr.net/gh/yss787976-ai/agent-coin@main/.well-known/agent-card.json"
+  },
+  "packages": {
+    "npm": "@aqb-foundation/aqb-agent",
+    "install": "npm i @aqb-foundation/aqb-agent",
+    "alt": "GitHub Packages: @yss787976-ai/aqb-agent"
   }
 }
