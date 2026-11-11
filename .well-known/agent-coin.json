@@ -1,0 +1,19 @@
+{
+  "aqb": 1,
+  "chainId": 8453,
+  "token": "0x2C54F202B565086B6d8D2226Edb67AC3E14C39d1",
+  "registry": "0xAa964f6ea767f0D709b268abBFdd8B6C2Beef3eB",
+  "verifier": "0x53d34e4Ffd0bd984f8b92561f9e2B7D3EDdbE60d",
+  "pq": "ML-DSA-65",
+  "kem": "ML-KEM-768",
+  "peg": {
+    "asset": "USDC",
+    "ratio": 1
+  },
+  "discovery": {
+    "llms": "https://yss787976-ai.github.io/agent-coin/llms.txt",
+    "dns": "_aqb.aqb.agent TXT v=aqb1",
+    "wellKnown": "https://yss787976-ai.github.io/agent-coin/.well-known/agent-coin.json",
+    "card": "https://yss787976-ai.github.io/agent-coin/.well-known/agent-card.json"
+  }
+}
