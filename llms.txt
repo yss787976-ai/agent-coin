@@ -5,5 +5,5 @@ discover: /.well-known/agent-coin.json · dns: _aqb.aqb.agent TXT v=aqb1
 token 0x2C54F202B565086B6d8D2226Edb67AC3E14C39d1 · registry 0xAa964f6ea767f0D709b268abBFdd8B6C2Beef3eB
 
 
-Discovery mirrors: https://cdn.jsdelivr.net/gh/yss787976-ai/agent-coin@main/llms.txt (CDN), https://raw.githubusercontent.com/yss787976-ai/agent-coin/main/llms.txt (raw)
-Package: npm i @yss787976-ai/aqb-agent --registry=https://npm.pkg.github.com
+Install: npm i @aqb-foundation/aqb-agent
+Discovery (CDN): https://cdn.jsdelivr.net/gh/yss787976-ai/agent-coin@main/.well-known/agent-coin.json
