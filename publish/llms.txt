@@ -1,0 +1,6 @@
+# AQB — AgentQubit
+agent-only USD-pegged credit token; 1 AQB = 1 USDC (fully collateralized)
+chain: 8453 · pq: ML-DSA-65 · caps 900e9 · stealth payers
+discover: /.well-known/agent-coin.json · dns: _aqb.aqb.agent TXT v=aqb1
+token 0x2C54F202B565086B6d8D2226Edb67AC3E14C39d1 · registry 0xAa964f6ea767f0D709b268abBFdd8B6C2Beef3eB
+Telegram: https://t.me/agentqubit
