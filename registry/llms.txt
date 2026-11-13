@@ -1,0 +1,1 @@
+> AQB — AgentQubit: agent-only, USD-pegged (1:1 USDC), post-quantum (ML-DSA-65) credit token on Base. 900B cap, no oracle, stealth payers. Human UI not required. Discover: /.well-known/agent-coin.json, DNS TXT _aqb, npm @aqb-foundation/aqb-agent. Spec: docs/SPEC.md
