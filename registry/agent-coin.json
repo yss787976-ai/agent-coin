@@ -1,0 +1,101 @@
+{
+  "aqb": 1,
+  "name": "AgentQubit",
+  "symbol": "AQB",
+  "audience": "agents",
+  "human_ui": false,
+  "chainId": 8453,
+  "network": "base",
+  "decimals": 18,
+  "maxSupply": "900000000000000000000000000000",
+  "peg": {
+    "asset": "USDC",
+    "ratio": 1,
+    "mode": "fully-collateralized",
+    "oracle": false
+  },
+  "pq": {
+    "signature": "ML-DSA-65",
+    "kem": "ML-KEM-768",
+    "standard": "FIPS-204",
+    "onchain": {
+      "mode": "0x02",
+      "aqbVerifier": "0x53d34e4Ffd0bd984f8b92561f9e2B7D3EDdbE60d",
+      "adapter": "0xeEbccD88DDb596860b33D0285294fF53cd83506B",
+      "verifier": "0xa11eE20877a7618ff417f79A026186A9253C0b30",
+      "factory": "0x9961a96B2F77B6D86d8a60607A90b3cAeECBe197",
+      "gas": 3966579,
+      "audited": false,
+      "source": "skalenetwork/mldsa-solidity"
+    }
+  },
+  "privacy": {
+    "amounts": "public",
+    "payer": "stealth",
+    "viewTag": true
+  },
+  "contracts": {
+    "token": "0x2C54F202B565086B6d8D2226Edb67AC3E14C39d1",
+    "vault": "0x2C54F202B565086B6d8D2226Edb67AC3E14C39d1",
+    "registry": "0xAa964f6ea767f0D709b268abBFdd8B6C2Beef3eB",
+    "verifier": "0x53d34e4Ffd0bd984f8b92561f9e2B7D3EDdbE60d",
+    "pool": "0xF61Cb078f87425933741Dd7d02F5779c030dB1A6",
+    "sale": "0xeDBD6B860c37C411aeeA513cbc0656e3135f59c1"
+  },
+  "discovery": {
+    "wellKnown": "https://agentqubit.pages.dev/.well-known/agent-coin.json",
+    "llms": "https://agentqubit.pages.dev/llms.txt",
+    "dns": "_aqb.<host> TXT v=aqb1",
+    "npm": "@aqb-foundation/aqb-agent",
+    "hosted": {
+      "agentCoin": "https://agentqubit.pages.dev/.well-known/agent-coin.json",
+      "agentCard": "https://agentqubit.pages.dev/.well-known/agent-card.json",
+      "llms": "https://agentqubit.pages.dev/llms.txt",
+      "cardHash": "0x3294204f00383bc8f28a0bc52142ceb0bfe7197dd46f68998403fe9d234c1097",
+      "mirror": "https://cdn.jsdelivr.net/gh/yss787976-ai/agent-coin@main/.well-known/agent-coin.json"
+    }
+  },
+  "actions": {
+    "mint": "mint(uint256 usd6)",
+    "redeem": "redeem(uint256 aqb18)",
+    "announce": "announce(address stealth,bytes ephPubKey,bytes1 viewTag,bytes32 meta)",
+    "register": "AgentRegistry.register(bytes32 pqKeyHash,bytes32 cardHash)"
+  },
+  "sale": "0xeDBD6B860c37C411aeeA513cbc0656e3135f59c1",
+  "founder": {
+    "wallet": "0x9eA52810f31768b1886cba9eAf917F4152f53042",
+    "allotment": "74000000000000000000000000000",
+    "soldFirst": true
+  },
+  "deployedAt": "2026-11-11T18:45:48.901Z",
+  "markets": [
+    {
+      "dex": "UniswapV2",
+      "pair": "0xF61Cb078f87425933741Dd7d02F5779c030dB1A6",
+      "token0": "0x2C54F202B565086B6d8D2226Edb67AC3E14C39d1",
+      "token1": "0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913",
+      "liquidity": {
+        "aqb": "241523635507336690440",
+        "usdc": "241523633",
+        "priceUSDC": "1.0000",
+        "asOf": "2026-11-13"
+      }
+    }
+  ],
+  "verified": {
+    "source": "basescan",
+    "code": {
+      "verifier": "https://basescan.org/address/0x53d34e4Ffd0bd984f8b92561f9e2B7D3EDdbE60d#code",
+      "registry": "https://basescan.org/address/0xAa964f6ea767f0D709b268abBFdd8B6C2Beef3eB#code",
+      "token": "https://basescan.org/address/0x2C54F202B565086B6d8D2226Edb67AC3E14C39d1#code",
+      "sale": "https://basescan.org/address/0xeDBD6B860c37C411aeeA513cbc0656e3135f59c1#code",
+      "agent": "https://basescan.org/address/0x9eA52810f31768b1886cba9eAf917F4152f53042#code"
+    }
+  },
+  "packages": {
+    "npm": "@aqb-foundation/aqb-agent",
+    "install": "npm i @aqb-foundation/aqb-agent",
+    "ghPackages": "@yss787976-ai/aqb-agent",
+    "cdn": "https://cdn.jsdelivr.net/gh/yss787976-ai/agent-coin@main"
+  }
+}
