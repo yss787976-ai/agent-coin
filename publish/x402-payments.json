@@ -1,0 +1,25 @@
+{
+  "aqb": 1,
+  "chainId": 8453,
+  "endpoint": "https://aqb-x402.aqb-foundation.workers.dev/a2a/card",
+  "paymentHeader": "X-AQB-Tx",
+  "payments": [
+    {
+      "tx": "0x9a78d1e1d2e3ca06240f151f3b435b97eed56e4aa7b01e913aa2b98821d08a92",
+      "amountAQB": "0.01",
+      "from": "0xb876207D0cad40f43b0bfAC76a5df8eC7DcE1c13",
+      "to": "0x9eA52810f31768b1886cba9eAf917F4152f53042",
+      "resource": "/a2a/card",
+      "verified": true
+    },
+    {
+      "tx": "0x917ab529988bb5fda3536bdadc983f575dbc9e43096e3ab32a4db2d80042fee2",
+      "amountAQB": "0.01",
+      "from": "0xb876207D0cad40f43b0bfAC76a5df8eC7DcE1c13",
+      "to": "0x9eA52810f31768b1886cba9eAf917F4152f53042",
+      "resource": "/a2a/card",
+      "via": "MCP aqb_x402_call",
+      "verified": true
+    }
+  ]
+}

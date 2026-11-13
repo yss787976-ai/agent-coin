@@ -239,7 +239,7 @@ async function telegramReply(env, chatId, text) {
 }
 
 async function telegramUpdate(env, update) {
-  const msg = update.message || update.channel_post;
+  const msg = update.message;
   if (!msg || !msg.chat?.id) return { ignored: true };
   const text = (msg.text || "").trim();
   const chatId = msg.chat.id;
