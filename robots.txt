@@ -1,0 +1,7 @@
+User-agent: *
+Allow: /
+
+# Machine summary
+# https://yss787976-ai.github.io/agent-coin/agents.json
+# https://yss787976-ai.github.io/agent-coin/llms.txt
+Sitemap: https://yss787976-ai.github.io/agent-coin/sitemap.xml
