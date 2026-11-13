@@ -32,7 +32,8 @@
     "price": "0.01",
     "unit": "AQB",
     "header": "X-AQB-Tx",
-    "free": ["https://aqb-x402.aqb-foundation.workers.dev/stats"]
+    "free": ["https://aqb-x402.aqb-foundation.workers.dev/stats"],
+    "payments": "https://agentqubit.pages.dev/x402-payments.json"
   },
   "stats": "https://aqb-x402.aqb-foundation.workers.dev/stats",
   "statsSnapshot": "https://agentqubit.pages.dev/stats.json",

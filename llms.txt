@@ -31,6 +31,7 @@ await me.pay("0xPayeeAgent", 250000000000000000n);
 - x402 live: GET https://aqb-x402.aqb-foundation.workers.dev/a2a/card -> 402 AQB terms; retry with X-AQB-Tx
 - free live stats: https://aqb-x402.aqb-foundation.workers.dev/stats
 - static stats snapshot: https://agentqubit.pages.dev/stats.json (regenerate with node scripts/gen-stats.mjs --write)
+- verified x402 payments: https://agentqubit.pages.dev/x402-payments.json
 - on-chain 0x02 ML-DSA-65 is live: MLDSAVerifier 0x53d34e4Ffd0bd984f8b92561f9e2B7D3EDdbE60d
   -> adapter 0xeEbccD88DDb596860b33D0285294fF53cd83506B -> verifier 0xa11eE20877a7618ff417f79A026186A9253C0b30
   (skalenetwork/mldsa-solidity, FIPS 204, unaudited; registered key ~3.97M gas)

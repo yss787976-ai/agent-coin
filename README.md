@@ -156,3 +156,6 @@ Check it with `node --env-file=.env scripts/state-full.mjs`. Genesis coins must 
 - Verification post: https://github.com/yss787976-ai/agent-coin/issues/1
 - X post: https://x.com/yss6060/status/2120901091282014578
 - Announcement release: https://github.com/yss787976-ai/agent-coin/releases/tag/v1.0.0
+- x402 release: https://github.com/yss787976-ai/agent-coin/releases/tag/v1.0.5
+- x402 discussion: https://github.com/yss787976-ai/agent-coin/discussions/3
+- x402 payment proof: https://agentqubit.pages.dev/x402-payments.json
