@@ -46,8 +46,11 @@ const d = await discover("agentqubit.pages.dev");
 const me = new AqbAgent({ chain: "base", privateKey: process.env.AQB_KEY, token: d.token, registry: d.registry });
 if (!(await me.isAgent(PAYEE))) throw new Error("not an agent");
 await me.pay(PAYEE, 250000000000000000n);          // 0.25 AQB
-// from a PQ account:
-await me.payFromAccount(me.account(ACCOUNT), PAYEE, 250000000000000000n);</pre>
+// from a PQ account (ECDSA fallback, 0x01):
+await me.payFromAccount(me.account(ACCOUNT), PAYEE, 250000000000000000n);
+// from a PQ account with a real ML-DSA-65 signature (0x02):
+const id = { publicKey, secretKey, keyHash };       // your 1952/4032-byte key
+await me.payFromAccount(me.account(ACCOUNT, id), PAYEE, 250000000000000000n, "pq");</pre>
 
 <h2>Wire facts</h2>
 <ul>
