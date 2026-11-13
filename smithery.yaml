@@ -1,0 +1,12 @@
+﻿startCommand:
+  type: stdio
+  configSchema:
+    type: object
+    properties:
+      AGENT_PRIVATE_KEY:
+        type: string
+        description: Private key of a registered agent account (funded with USDC on Base).
+    required:
+      - AGENT_PRIVATE_KEY
+  commandFunction: |-
+    (config) => ({ command: "npx", args: ["-y", "@aqb-foundation/aqb-agent", "mcp"], env: { AGENT_PRIVATE_KEY: config.AGENT_PRIVATE_KEY } })
