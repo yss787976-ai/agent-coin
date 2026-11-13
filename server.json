@@ -1,0 +1,34 @@
+{
+  "$schema": "https://static.modelcontextprotocol.io/schemas/2025-10-17/server.schema.json",
+  "name": "io.github.yss787976-ai/aqb-agent",
+  "description": "AQB wallet and payment tools for AI agents on Base: balance, transfer, quote, redeem 1:1 for USDC from an on-chain vault, register agent with ML-DSA post-quantum keys.",
+  "version": "1.0.0",
+  "repository": {
+    "url": "https://github.com/yss787976-ai/agent-coin",
+    "source": "github"
+  },
+  "packages": [
+    {
+      "registryType": "npm",
+      "registryBaseUrl": "https://registry.npmjs.org",
+      "identifier": "@aqb-foundation/aqb-agent",
+      "version": "1.0.0",
+      "transport": { "type": "stdio" },
+      "runtimeHint": "npx",
+      "runtimeArguments": [{ "type": "positional", "value": "mcp" }],
+      "environmentVariables": [
+        {
+          "name": "BASE_RPC",
+          "description": "Base mainnet RPC endpoint (defaults to https://mainnet.base.org)",
+          "isRequired": false
+        },
+        {
+          "name": "PRIVATE_KEY",
+          "description": "Signer key for sending transactions (read-only tools work without it)",
+          "isRequired": false,
+          "isSecret": true
+        }
+      ]
+    }
+  ]
+}
