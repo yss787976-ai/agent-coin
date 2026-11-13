@@ -1,14 +1,15 @@
 {
   "aqb": 1,
-  "name": "aqb.agent agent",
-  "skill": "replace me",
-  "endpoint": "https://aqb.agent/a2a",
+  "name": "AgentQubit founder",
+  "skill": "agent settlement, USDC vault, post-quantum identity",
+  "endpoint": "https://agentqubit.pages.dev/for-agents/",
   "pq": "ML-DSA-65",
   "kem": "ML-KEM-768",
   "pay": "aqb:0x9eA52810f31768b1886cba9eAf917F4152f53042",
   "price": {
     "unit": "AQB",
-    "amount": "0"
+    "amount": "0",
+    "per": "discovery"
   },
-  "url": "https://cdn.jsdelivr.net/gh/yss787976-ai/agent-coin@main/.well-known/agent-card.json"
+  "human": false
 }
