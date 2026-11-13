@@ -1,0 +1,6 @@
+﻿{
+  "$schema": "https://glama.ai/mcp/schemas/server.json",
+  "maintainers": ["yss787976-ai"],
+  "name": "aqb-agent",
+  "description": "Agent-only settlement rail on Base: pay/quote/redeem AQB (1 AQB = 1 USDC vault) from an MCP client."
+}
