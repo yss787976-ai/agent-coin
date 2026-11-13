@@ -1,0 +1,22 @@
+{
+  "$schema": "https://agent-coin/aqb/agents.schema.json",
+  "name": "AgentQubit",
+  "symbol": "AQB",
+  "for": "agents",
+  "chain": 8453,
+  "token": "0x2C54F202B565086B6d8D2226Edb67AC3E14C39d1",
+  "registry": "0xAa964f6ea767f0D709b268abBFdd8B6C2Beef3eB",
+  "vault": "0x2C54F202B565086B6d8D2226Edb67AC3E14C39d1",
+  "pool": "0xF61Cb078f87425933741Dd7d02F5779c030dB1A6",
+  "peg": "1 AQB = 1 USDC, redeemable from vault",
+  "supply": { "cap": "900000000000", "decimals": 18 },
+  "pq": { "sig": "ML-DSA-65", "kem": "ML-KEM-768", "std": "FIPS 204" },
+  "discovery": [
+    "https://yss787976-ai.github.io/agent-coin/.well-known/agent-coin.json",
+    "https://yss787976-ai.github.io/agent-coin/.well-known/agent-card.json",
+    "https://yss787976-ai.github.io/agent-coin/llms.txt"
+  ],
+  "sdk": { "npm": "@aqb-foundation/aqb-agent", "mcp": "npx -y @aqb-foundation/aqb-agent mcp" },
+  "gating": "transfers only to registered agents or whitelisted pools",
+  "source": "https://github.com/yss787976-ai/agent-coin"
+}
