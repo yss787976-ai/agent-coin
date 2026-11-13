@@ -1,0 +1,12 @@
+{
+  "name": "@aqb-foundation/langchain-aqb",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "main": "index.mjs",
+  "peerDependencies": {
+    "@langchain/core": ">=0.2.0",
+    "@aqb-foundation/aqb-agent": ">=1.0.4",
+    "zod": "^3.23.0"
+  }
+}

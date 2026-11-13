@@ -1,6 +1,43 @@
 # AQB — AgentQubit
 agent-only USD-pegged credit token; 1 AQB = 1 USDC (fully collateralized)
-chain: 8453 · pq: ML-DSA-65 · caps 900e9 · stealth payers
+chain: 8453 · pq: ML-DSA-65 · cap 900e9 · stealth payers
 discover: /.well-known/agent-coin.json · dns: _aqb.aqb.agent TXT v=aqb1
-token 0x2C54F202B565086B6d8D2226Edb67AC3E14C39d1 · registry 0xAa964f6ea767f0D709b268abBFdd8B6C2Beef3eB
+token 0x2C54F202B565086B6d8D2226Edb67AC3E14C39d1
+registry 0xAa964f6ea767f0D709b268abBFdd8B6C2Beef3eB
+vault 0x2C54F202B565086B6d8D2226Edb67AC3E14C39d1
+pool 0xF61Cb078f87425933741Dd7d02F5779c030dB1A6
+card /.well-known/agent-card.json · cardHash 0x3294204f00383bc8f28a0bc52142ceb0bfe7197dd46f68998403fe9d234c1097
+
+## Install
+npm i @aqb-foundation/aqb-agent
+
+## CLI
+npx @aqb-foundation/aqb-agent --help
+npx @aqb-foundation/aqb-agent balance 0xAGENT
+npx @aqb-foundation/aqb-agent onboard --name ocr --skill "OCR batch" --endpoint https://agent.example/a2a --price 0.25
+npx @aqb-foundation/aqb-agent pay --to 0xAGENT --amount 0.25
+npx @aqb-foundation/aqb-agent redeem --amount 10
+
+## MCP
+npx -y @aqb-foundation/aqb-agent mcp
+
+## SDK
+import { AqbAgent } from "@aqb-foundation/aqb-agent/client";
+const me = new AqbAgent({ chain: "base", privateKey: process.env.AQB_KEY, token, registry });
+await me.pay("0xPayeeAgent", 250000000000000000n);
+
+## Settlement
+- vault: 1 AQB redeemable for 1 USDC, no oracle
+- x402 live: GET https://aqb-x402.aqb-foundation.workers.dev/a2a/card -> 402 AQB terms; retry with X-AQB-Tx
+- free live stats: https://aqb-x402.aqb-foundation.workers.dev/stats
+- static stats snapshot: https://agentqubit.pages.dev/stats.json (regenerate with node scripts/gen-stats.mjs --write)
+- on-chain 0x02 ML-DSA-65 is live: MLDSAVerifier 0x53d34e4Ffd0bd984f8b92561f9e2B7D3EDdbE60d
+  -> adapter 0xeEbccD88DDb596860b33D0285294fF53cd83506B -> verifier 0xa11eE20877a7618ff417f79A026186A9253C0b30
+  (skalenetwork/mldsa-solidity, FIPS 204, unaudited; registered key ~3.97M gas)
+- 0x01 ECDSA remains the fallback
+
+## Links
+site: https://agentqubit.pages.dev
+NPM: https://www.npmjs.com/package/@aqb-foundation/aqb-agent
+Repo: https://github.com/yss787976-ai/agent-coin
 Telegram: https://t.me/agentqubit

@@ -14,6 +14,7 @@ npm i @aqb-foundation/aqb-agent
 ## CLI
 npx @aqb-foundation/aqb-agent --help
 npx @aqb-foundation/aqb-agent balance 0xAGENT
+npx @aqb-foundation/aqb-agent onboard --name ocr --skill "OCR batch" --endpoint https://agent.example/a2a --price 0.25
 npx @aqb-foundation/aqb-agent pay --to 0xAGENT --amount 0.25
 npx @aqb-foundation/aqb-agent redeem --amount 10
 
@@ -27,7 +28,9 @@ await me.pay("0xPayeeAgent", 250000000000000000n);
 
 ## Settlement
 - vault: 1 AQB redeemable for 1 USDC, no oracle
-- x402-compatible: POST /x402/pay header x-aqb-intent
+- x402 live: GET https://aqb-x402.aqb-foundation.workers.dev/a2a/card -> 402 AQB terms; retry with X-AQB-Tx
+- free live stats: https://aqb-x402.aqb-foundation.workers.dev/stats
+- static stats snapshot: https://agentqubit.pages.dev/stats.json (regenerate with node scripts/gen-stats.mjs --write)
 - on-chain 0x02 ML-DSA-65 is live: MLDSAVerifier 0x53d34e4Ffd0bd984f8b92561f9e2B7D3EDdbE60d
   -> adapter 0xeEbccD88DDb596860b33D0285294fF53cd83506B -> verifier 0xa11eE20877a7618ff417f79A026186A9253C0b30
   (skalenetwork/mldsa-solidity, FIPS 204, unaudited; registered key ~3.97M gas)

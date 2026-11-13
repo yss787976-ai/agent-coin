@@ -8,16 +8,43 @@
   "registry": "0xAa964f6ea767f0D709b268abBFdd8B6C2Beef3eB",
   "vault": "0x2C54F202B565086B6d8D2226Edb67AC3E14C39d1",
   "pool": "0xF61Cb078f87425933741Dd7d02F5779c030dB1A6",
-  "peg": "1 AQB = 1 USDC, redeemable from vault",
+  "sale": "0xeDBD6B860c37C411aeeA513cbc0656e3135f59c1",
+  "peg": "1 AQB = 1 USDC redeemable from the vault; no oracle",
   "supply": { "cap": "900000000000", "decimals": 18 },
-  "pq": { "sig": "ML-DSA-65", "kem": "ML-KEM-768", "std": "FIPS 204" },
+  "pq": {
+    "sig": "ML-DSA-65",
+    "kem": "ML-KEM-768",
+    "std": "FIPS 204",
+    "onchain": "0x02",
+    "verifier": "0xa11eE20877a7618ff417f79A026186A9253C0b30"
+  },
+  "card": "https://agentqubit.pages.dev/.well-known/agent-card.json",
+  "cardHash": "0x3294204f00383bc8f28a0bc52142ceb0bfe7197dd46f68998403fe9d234c1097",
   "discovery": [
     "https://agentqubit.pages.dev/.well-known/agent-coin.json",
     "https://agentqubit.pages.dev/.well-known/agent-card.json",
-    "https://agentqubit.pages.dev/llms.txt"
+    "https://agentqubit.pages.dev/llms.txt",
+    "https://agentqubit.pages.dev/stats.json"
   ],
-  "sdk": { "npm": "@aqb-foundation/aqb-agent", "mcp": "npx -y @aqb-foundation/aqb-agent mcp" },
+  "sdk": {
+    "npm": "@aqb-foundation/aqb-agent",
+    "cli": "npx @aqb-foundation/aqb-agent --help",
+    "onboard": "npx @aqb-foundation/aqb-agent onboard --name <name> --skill <skill> --endpoint <url> --price <aqb>",
+    "mcp": "npx -y @aqb-foundation/aqb-agent mcp"
+  },
+  "x402": {
+    "scheme": "aqb",
+    "paid": "https://aqb-x402.aqb-foundation.workers.dev/a2a/card",
+    "price": "0.01",
+    "unit": "AQB",
+    "header": "X-AQB-Tx",
+    "free": ["https://aqb-x402.aqb-foundation.workers.dev/stats"]
+  },
+  "stats": "https://aqb-x402.aqb-foundation.workers.dev/stats",
   "gating": "transfers only to registered agents or whitelisted pools",
-  "source": "https://github.com/yss787976-ai/agent-coin"
+  "source": "https://github.com/yss787976-ai/agent-coin",
+  "community": {
+    "telegram": "https://t.me/agentqubit",
+    "x": "https://x.com/yss6060"
+  }
 }
-Telegram: https://t.me/agentqubit

@@ -1,0 +1,36 @@
+{
+  "aqb": 1,
+  "chainId": 8453,
+  "asOf": "2026-11-13T22:54:47.227Z",
+  "block": 57100557,
+  "token": "0x2C54F202B565086B6d8D2226Edb67AC3E14C39d1",
+  "registry": "0xAa964f6ea767f0D709b268abBFdd8B6C2Beef3eB",
+  "pool": "0xF61Cb078f87425933741Dd7d02F5779c030dB1A6",
+  "sale": "0xeDBD6B860c37C411aeeA513cbc0656e3135f59c1",
+  "founder": "0x9eA52810f31768b1886cba9eAf917F4152f53042",
+  "decimals": 18,
+  "totalSupplyAQB": "73999999740.59",
+  "founderAQB": "73999999493.424353112704348586",
+  "saleAQB": "0",
+  "circulatingAQB": "247.165646887295651414",
+  "vaultUSDC": "284.99",
+  "collateralRatio": "1.153032",
+  "agents": "22",
+  "poolReserves": {
+    "aqb": "241.52363550733669044",
+    "usdc": "241.523633"
+  },
+  "poolPriceUSDC": "1.000000",
+  "pq": {
+    "signature": "ML-DSA-65",
+    "kem": "ML-KEM-768",
+    "mode": "0x02",
+    "verifier": "0xa11eE20877a7618ff417f79A026186A9253C0b30"
+  },
+  "x402": {
+    "paid": "https://aqb-x402.aqb-foundation.workers.dev/a2a/card",
+    "free": "https://aqb-x402.aqb-foundation.workers.dev/stats",
+    "price": "0.01",
+    "unit": "AQB"
+  }
+}

@@ -1,0 +1,11 @@
+{
+  "name": "@aqb-foundation/elizaos-aqb",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "main": "index.mjs",
+  "peerDependencies": {
+    "@elizaos/core": ">=1.0.0",
+    "@aqb-foundation/aqb-agent": ">=1.0.4"
+  }
+}

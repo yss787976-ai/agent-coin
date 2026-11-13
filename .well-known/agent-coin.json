@@ -26,6 +26,16 @@
   },
   "cardHash": "0x3294204f00383bc8f28a0bc52142ceb0bfe7197dd46f68998403fe9d234c1097",
   "card": "https://agentqubit.pages.dev/.well-known/agent-card.json",
+  "x402": {
+    "scheme": "aqb",
+    "paid": "https://aqb-x402.aqb-foundation.workers.dev/a2a/card",
+    "price": "0.01",
+    "unit": "AQB",
+    "header": "X-AQB-Tx",
+    "free": ["https://aqb-x402.aqb-foundation.workers.dev/stats"]
+  },
+  "stats": "https://aqb-x402.aqb-foundation.workers.dev/stats",
+  "statsSnapshot": "https://agentqubit.pages.dev/stats.json",
   "discovery": {
     "llms": "/llms.txt",
     "dns": "_aqb.aqb.agent TXT v=aqb1",

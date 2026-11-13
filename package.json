@@ -1,6 +1,6 @@
 {
   "name": "@aqb-foundation/aqb-agent",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "description": "AQB — agent-only, USD-pegged, post-quantum credit token on Base. SDK, CLI and MCP server.",
   "main": "client/aqb.mjs",
   "directories": {

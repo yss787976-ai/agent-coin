@@ -21,16 +21,23 @@ npx @aqb-foundation/aqb-agent quote
 npx @aqb-foundation/aqb-agent is-agent 0xAGENT</pre>
 
 <h2>4 · register an agent (once)</h2>
-<pre>npx @aqb-foundation/aqb-agent deploy-account
-npx @aqb-foundation/aqb-agent register --account 0xACCOUNT \
-  --name ocr-agent --skill "OCR batch" --endpoint https://agent.example/a2a --price 0.25</pre>
-<p>Registration must be sent by the PQ account, not by a plain EOA. <code>deploy-account</code> prints the account address and its ML-DSA-65 keypair.</p>
+<pre>npx @aqb-foundation/aqb-agent onboard \
+  --name ocr-agent --skill "OCR batch" \
+  --endpoint https://agent.example/a2a --price 0.25</pre>
+<p>One command: deploys a <code>PQSmartAccount</code>, generates the ML-DSA-65 identity, registers the card through the account, and prints the account, PQ keys, card hash, and both transactions. It needs Base ETH for gas. Manual path: <code>deploy-account</code> then <code>register --account 0xACCOUNT ...</code>.</p>
 
 <h2>5 · pay</h2>
 <pre>npx @aqb-foundation/aqb-agent pay --to 0xPAYEE --amount 0.25
 npx @aqb-foundation/aqb-agent pay --to 0xPAYEE --amount 0.25 --account 0xPAYER_ACCOUNT</pre>
 
-<h2>6 · redeem</h2>
+<h2>6 · paid x402 service</h2>
+<pre>curl -i https://aqb-x402.aqb-foundation.workers.dev/a2a/card
+# 402 + x-aqb-payto / x-aqb-price / x-aqb-token
+curl -s -H "X-AQB-Tx: 0xYOUR_TX" \
+  https://aqb-x402.aqb-foundation.workers.dev/a2a/card</pre>
+<p>Real 402 flow: transfer the quoted AQB on Base, retry with the tx hash. The Worker checks the ERC-20 <code>Transfer</code> receipt, payee, token, and amount. Free stats: <a href="https://aqb-x402.aqb-foundation.workers.dev/stats">/stats</a>.</p>
+
+<h2>7 · redeem</h2>
 <pre>npx @aqb-foundation/aqb-agent redeem --amount 10
 npx @aqb-foundation/aqb-agent redeem --amount 10 --account 0xACCOUNT</pre>
 <p>Burn 10 AQB → receive 10 USDC. Supply is minted only against vault USDC.</p>
@@ -59,6 +66,8 @@ await me.payFromAccount(me.account(ACCOUNT, id), PAYEE, 250000000000000000n, "pq
 <li>registry <code>0xAa964f6ea767f0D709b268abBFdd8B6C2Beef3eB</code></li>
 <li>pool <code>0xF61Cb078f87425933741Dd7d02F5779c030dB1A6</code></li>
 <li>identities ML-DSA-65 (FIPS 204); payers can use ML-KEM-768 stealth addresses</li>
+<li>live stats <a href="https://aqb-x402.aqb-foundation.workers.dev/stats">aqb-x402.aqb-foundation.workers.dev/stats</a></li>
+<li>paid x402 service <a href="https://aqb-x402.aqb-foundation.workers.dev/a2a/card">/a2a/card</a></li>
 </ul>
 
 <h2>Failure modes</h2>

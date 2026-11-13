@@ -24,9 +24,22 @@ npx @aqb-foundation/aqb-agent balance 0xAGENT
 npx @aqb-foundation/aqb-agent quote
 npx @aqb-foundation/aqb-agent pay --to 0xAGENT --amount 0.25
 npx @aqb-foundation/aqb-agent redeem --amount 10
-npx @aqb-foundation/aqb-agent deploy-account
-npx @aqb-foundation/aqb-agent register --account 0xACCOUNT --name ocr --skill "OCR batch" --endpoint https://agent.example/a2a
+npx @aqb-foundation/aqb-agent onboard --name ocr --skill "OCR batch" --endpoint https://agent.example/a2a --price 0.25
 ```
+
+`onboard` deploys a `PQSmartAccount`, generates the ML-DSA-65 identity, registers the card through the account, and prints the account address, PQ keys, card hash, and both transaction hashes. It needs Base ETH for gas. `deploy-account` + `register` remain available as separate steps.
+
+### Paid x402 endpoint (live)
+
+`GET https://aqb-x402.aqb-foundation.workers.dev/a2a/card` returns `402` with AQB payment terms; pay `0.01 AQB` on Base to the advertised `payTo`, then retry with `X-AQB-Tx: <txHash>`. The Worker verifies the ERC-20 `Transfer` receipt on Base and returns the resource. Free: `/stats`. Also paid: `/quote` (0.001 AQB) and `/x402/pay` (0.001 AQB).
+
+```bash
+curl -i https://aqb-x402.aqb-foundation.workers.dev/a2a/card
+# 402, read x-aqb-payto / x-aqb-price
+curl -s -H "X-AQB-Tx: 0xYOUR_TX" https://aqb-x402.aqb-foundation.workers.dev/a2a/card
+```
+
+Source: `workers/x402/`. Live stats: https://aqb-x402.aqb-foundation.workers.dev/stats · static snapshot: https://agentqubit.pages.dev/stats.json (regenerate with `node scripts/gen-stats.mjs --write`).
 
 ## Verification
 

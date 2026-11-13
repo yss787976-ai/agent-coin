@@ -87,6 +87,7 @@ const HELP = `aqb-agent ${pkg.version}
   aqb-agent register --account 0x.. [--name .. --skill .. --endpoint .. --price ..]
   aqb-agent update-card --account 0x.. [--card file.json | --name .. --skill ..]
   aqb-agent card [--card file.json | --name .. --skill .. --endpoint ..]
+  aqb-agent onboard [--name .. --skill .. --endpoint .. --price ..] [--faucet URL]
   aqb-agent deploy-account             deploy a PQSmartAccount (prints its PQ keys)
   aqb-agent announce --account 0x.. --eph-pubkey 0x.. --shared-secret 0x..
   aqb-agent version
@@ -197,6 +198,69 @@ async function main() {
   if (cmd === "card") {
     const card = readCard(args, args.account);
     console.log(JSON.stringify({ card, cardHash: cardHash(card) }, null, 2));
+    return;
+  }
+
+  if (cmd === "onboard") {
+    if (args["dry-run"]) {
+      console.log(JSON.stringify({
+        dryRun: true,
+        ecdsaFallback: c.signer?.address || "0x0000000000000000000000000000000000000000",
+        verifier: DEFAULTS.verifier,
+        chainId: c.chainId,
+        card: buildCard(args, "0x0000000000000000000000000000000000000000"),
+        steps: ["deploy PQSmartAccount", "register agent card via the ECDSA fallback", args.faucet ? `POST ${args.faucet}` : null].filter(Boolean),
+      }, null, 2));
+      return;
+    }
+    const signer = c.requireSigner();
+    const id = newIdentity();
+    const art = JSON.parse(fs.readFileSync(new URL("./artifacts/PQSmartAccount.json", import.meta.url), "utf8"));
+    const factory = new ContractFactory(art.abi, art.bytecode, signer);
+    process.stderr.write("onboard: deploying PQSmartAccount...\n");
+    const acc = await factory.deploy(DEFAULTS.verifier, signer.address, id.publicKey);
+    const deployTx = acc.deploymentTransaction()?.hash;
+    await acc.waitForDeployment();
+    const address = await acc.getAddress();
+    const card = buildCard(args, address);
+    process.stderr.write(`onboard: registering ${address}...\n`);
+    const registerTx = await c.registerViaAccount(address, card);
+    let faucet = null;
+    if (args.faucet) {
+      process.stderr.write(`onboard: calling faucet ${args.faucet}...\n`);
+      try {
+        const r = await fetch(args.faucet, {
+          method: "POST",
+          headers: { "content-type": "application/json" },
+          body: JSON.stringify({ address, chainId: c.chainId }),
+        });
+        const text = await r.text();
+        let body; try { body = JSON.parse(text); } catch { body = text; }
+        faucet = { status: r.status, body };
+      } catch (e) {
+        faucet = { error: e.message || String(e) };
+      }
+    }
+    console.log(JSON.stringify({
+      account: address,
+      ecdsaFallback: signer.address,
+      verifier: DEFAULTS.verifier,
+      chainId: c.chainId,
+      pqPublicKey: "0x" + Buffer.from(id.publicKey).toString("hex"),
+      pqSecretKey: "0x" + Buffer.from(id.secretKey).toString("hex"),
+      pqKeyHash: id.keyHash,
+      card,
+      cardHash: cardHash(card),
+      deployTx,
+      registerTx,
+      explorer: `https://basescan.org/address/${address}`,
+      faucet,
+      next: [
+        "save pqSecretKey offline; it is the agent identity",
+        `aqb-agent balance ${address}`,
+        "serve the card at the endpoint you registered",
+      ],
+    }, null, 2));
     return;
   }
 

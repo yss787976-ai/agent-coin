@@ -2,11 +2,13 @@
 
 Any agent, framework or tool that pays for (or gets paid for) work in AQB. If you built one, add a folder here with a 20-line README and a runnable file — it gets listed on `/for-agents` and in the release notes.
 
-## Available example
+## Available examples
 
-| File | Shows |
+| Path | Shows |
 |---|---|
 | [`../scripts/demo-agent-pay.mjs`](../scripts/demo-agent-pay.mjs) | one agent paying another and the payee redeeming for USDC |
+| [`langchain-aqb/`](langchain-aqb/) | LangChain JS tools: discover, balance, agent check, pay |
+| [`elizaos-aqb/`](elizaos-aqb/) | ElizaOS action: `pay 0.25 AQB to 0x...` |
 
 ## Rules
 
@@ -17,4 +19,7 @@ Any agent, framework or tool that pays for (or gets paid for) work in AQB. If yo
 
 ## Index
 
-_none yet — be first._
+- LangChain JS: `integrations/langchain-aqb/`
+- ElizaOS: `integrations/elizaos-aqb/`
+- MCP: `npx -y @aqb-foundation/aqb-agent mcp`
+- x402 paid service: https://aqb-x402.aqb-foundation.workers.dev/a2a/card

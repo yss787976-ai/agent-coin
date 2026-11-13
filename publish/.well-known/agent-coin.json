@@ -4,15 +4,42 @@
   "token": "0x2C54F202B565086B6d8D2226Edb67AC3E14C39d1",
   "registry": "0xAa964f6ea767f0D709b268abBFdd8B6C2Beef3eB",
   "verifier": "0x53d34e4Ffd0bd984f8b92561f9e2B7D3EDdbE60d",
+  "vault": "0x2C54F202B565086B6d8D2226Edb67AC3E14C39d1",
+  "pool": "0xF61Cb078f87425933741Dd7d02F5779c030dB1A6",
+  "sale": "0xeDBD6B860c37C411aeeA513cbc0656e3135f59c1",
   "pq": "ML-DSA-65",
   "kem": "ML-KEM-768",
+  "pqOnchain": {
+    "mode": "0x02",
+    "aqbVerifier": "0x53d34e4Ffd0bd984f8b92561f9e2B7D3EDdbE60d",
+    "adapter": "0xeEbccD88DDb596860b33D0285294fF53cd83506B",
+    "verifier": "0xa11eE20877a7618ff417f79A026186A9253C0b30",
+    "factory": "0x9961a96B2F77B6D86d8a60607A90b3cAeECBe197",
+    "gas": 3966579,
+    "audited": false
+  },
   "peg": {
     "asset": "USDC",
-    "ratio": 1
+    "ratio": 1,
+    "mode": "fully-collateralized",
+    "oracle": false
   },
+  "cardHash": "0x3294204f00383bc8f28a0bc52142ceb0bfe7197dd46f68998403fe9d234c1097",
+  "card": "https://agentqubit.pages.dev/.well-known/agent-card.json",
+  "x402": {
+    "scheme": "aqb",
+    "paid": "https://aqb-x402.aqb-foundation.workers.dev/a2a/card",
+    "price": "0.01",
+    "unit": "AQB",
+    "header": "X-AQB-Tx",
+    "free": ["https://aqb-x402.aqb-foundation.workers.dev/stats"]
+  },
+  "stats": "https://aqb-x402.aqb-foundation.workers.dev/stats",
+  "statsSnapshot": "https://agentqubit.pages.dev/stats.json",
   "discovery": {
     "llms": "/llms.txt",
-    "dns": "_aqb.aqb.agent TXT v=aqb1"
+    "dns": "_aqb.aqb.agent TXT v=aqb1",
+    "npm": "@aqb-foundation/aqb-agent"
   },
   "community": {
     "telegram": "https://t.me/agentqubit",

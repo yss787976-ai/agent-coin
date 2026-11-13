@@ -1,0 +1,19 @@
+name = "aqb-x402"
+main = "src/index.mjs"
+compatibility_date = "2026-11-01"
+
+[vars]
+AQB_CHAIN_ID = "8453"
+AQB_TOKEN = "0x2C54F202B565086B6d8D2226Edb67AC3E14C39d1"
+AQB_REGISTRY = "0xAa964f6ea767f0D709b268abBFdd8B6C2Beef3eB"
+AQB_PAYEE = "0x9eA52810f31768b1886cba9eAf917F4152f53042"
+AQB_POOL = "0xF61Cb078f87425933741Dd7d02F5779c030dB1A6"
+BASE_RPC = "https://mainnet.base.org"
+
+[[durable_objects.bindings]]
+name = "REPLAY"
+class_name = "Replay"
+
+[[migrations]]
+tag = "v1"
+new_sqlite_classes = ["Replay"]
