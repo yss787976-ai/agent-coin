@@ -1,0 +1,29 @@
+name: ship
+on:
+  release:
+    types: [published]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  announce:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Validate discovery files
+        run: |
+          for f in .well-known/agent-coin.json .well-known/agent-card.json agents.json; do
+            node -e "JSON.parse(require('fs').readFileSync('$f','utf8')); console.log('ok $f')"
+          done
+      - name: Ping IndexNow (Bing/Yandex/Seznam)
+        run: |
+          KEY=$(cat indexnow-key.txt)
+          curl -s -X POST https://api.indexnow.org/indexnow \
+            -H 'Content-Type: application/json' \
+            -d "{\"host\":\"yss787976-ai.github.io\",\"key\":\"$KEY\",\"keyLocation\":\"https://yss787976-ai.github.io/agent-coin/$KEY.txt\",\"urlList\":[\"https://yss787976-ai.github.io/agent-coin/\",\"https://yss787976-ai.github.io/agent-coin/for-agents/\",\"https://yss787976-ai.github.io/agent-coin/agents.json\",\"https://yss787976-ai.github.io/agent-coin/llms.txt\"]}"
+          echo "indexnow submitted"
+      - name: Print announce text
+        run: |
+          echo "::notice title=Announce::${{ github.event.release.name }} — https://github.com/${{ github.repository }}/releases/tag/${{ github.event.release.tag_name }}"
