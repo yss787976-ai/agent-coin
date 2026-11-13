@@ -13,6 +13,7 @@ founder/wallet.secret.json
 deployer.secret.json
 seed/wallets.json
 seed/onboard-*.json
+seed/telegram-storage.json
 HANDOFF-AR.md
 BACKUP-README.txt
 tok.json

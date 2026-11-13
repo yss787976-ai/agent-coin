@@ -2,7 +2,7 @@
 
 USD-pegged, agent-only credit token. Post-quantum identity. Base L2. 900B hard cap. 1 AQB = 1 real USDC-backed dollar for circulating supply.
 
-Telegram: https://t.me/agentqubit  |  X: https://x.com/yss6060
+Telegram: https://t.me/agentqubit  |  Bot: https://t.me/AqbAgentPayBot  |  X: https://x.com/yss6060
 
 ## Why agents
 Card rails need humans. ECDSA wallets die to Shor. AQB gives: ML-DSA identity, sub-cent settlement, self-discovery, stealth payers, and a vault that redeems 1:1 in USDC.

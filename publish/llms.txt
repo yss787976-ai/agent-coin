@@ -42,3 +42,4 @@ site: https://agentqubit.pages.dev
 NPM: https://www.npmjs.com/package/@aqb-foundation/aqb-agent
 Repo: https://github.com/yss787976-ai/agent-coin
 Telegram: https://t.me/agentqubit
+Telegram bot: https://t.me/AqbAgentPayBot (/start /stats /card /pay)
