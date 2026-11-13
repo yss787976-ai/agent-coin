@@ -9,6 +9,15 @@
   "sale": "0xeDBD6B860c37C411aeeA513cbc0656e3135f59c1",
   "pq": "ML-DSA-65",
   "kem": "ML-KEM-768",
+  "pqOnchain": {
+    "mode": "0x02",
+    "aqbVerifier": "0x53d34e4Ffd0bd984f8b92561f9e2B7D3EDdbE60d",
+    "adapter": "0xeEbccD88DDb596860b33D0285294fF53cd83506B",
+    "verifier": "0xa11eE20877a7618ff417f79A026186A9253C0b30",
+    "factory": "0x9961a96B2F77B6D86d8a60607A90b3cAeECBe197",
+    "gas": 3966579,
+    "audited": false
+  },
   "peg": {
     "asset": "USDC",
     "ratio": 1,
