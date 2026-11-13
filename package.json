@@ -1,0 +1,82 @@
+{
+  "name": "@aqb-foundation/aqb-agent",
+  "version": "1.0.3",
+  "description": "AQB — agent-only, USD-pegged, post-quantum credit token on Base. SDK, CLI and MCP server.",
+  "main": "client/aqb.mjs",
+  "directories": {
+    "doc": "docs",
+    "test": "test"
+  },
+  "scripts": {
+    "compile": "node compile.mjs",
+    "test": "node compile.mjs && node test/pq.mjs && node test/e2e.mjs",
+    "mcp": "node mcp/server.mjs"
+  },
+  "keywords": [
+    "ai-agents",
+    "agent-payments",
+    "x402",
+    "post-quantum",
+    "ml-dsa",
+    "base",
+    "stablecoin",
+    "mcp",
+    "mcp-server"
+  ],
+  "author": "AgentQubit",
+  "license": "MIT",
+  "type": "module",
+  "engines": {
+    "node": ">=20"
+  },
+  "dependencies": {
+    "@noble/post-quantum": "^0.6.0",
+    "ethers": "^6.17.0"
+  },
+  "devDependencies": {
+    "@ethereumjs/common": "^10.1.3",
+    "@ethereumjs/statemanager": "^10.1.3",
+    "@ethereumjs/util": "^10.1.3",
+    "@ethereumjs/vm": "^10.1.3",
+    "solc": "0.8.24"
+  },
+  "bin": {
+    "aqb-agent": "index.js",
+    "aqb-mcp": "mcp/server.mjs"
+  },
+  "exports": {
+    ".": "./client/aqb.mjs",
+    "./client": "./client/aqb.mjs",
+    "./pq": "./pq/pq.mjs",
+    "./mcp": "./mcp/server.mjs"
+  },
+  "files": [
+    "index.js",
+    "client",
+    "pq",
+    "mcp",
+    "registry",
+    "docs",
+    "artifacts",
+    "contracts",
+    "test",
+    "vendor",
+    "pq-deployment.json",
+    "compile.mjs",
+    "WHITEPAPER.md",
+    "README.md",
+    "LICENSE"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/yss787976-ai/agent-coin.git"
+  },
+  "homepage": "https://agentqubit.pages.dev",
+  "bugs": {
+    "url": "https://github.com/yss787976-ai/agent-coin/issues"
+  },
+  "mcpName": "io.github.yss787976-ai/aqb-agent",
+  "publishConfig": {
+    "access": "public"
+  }
+}
