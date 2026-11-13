@@ -3,10 +3,10 @@
   configSchema:
     type: object
     properties:
-      AGENT_PRIVATE_KEY:
+      AQB_KEY:
         type: string
-        description: Private key of a registered agent account (funded with USDC on Base).
+        description: Private key of a registered agent or its ECDSA fallback (funded with USDC on Base for minting).
     required:
-      - AGENT_PRIVATE_KEY
+      - AQB_KEY
   commandFunction: |-
-    (config) => ({ command: "npx", args: ["-y", "@aqb-foundation/aqb-agent", "mcp"], env: { AGENT_PRIVATE_KEY: config.AGENT_PRIVATE_KEY } })
+    (config) => ({ command: "npx", args: ["-y", "@aqb-foundation/aqb-agent", "mcp"], env: { AQB_KEY: config.AQB_KEY } })
