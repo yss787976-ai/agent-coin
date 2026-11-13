@@ -11,9 +11,9 @@
     "ratio": 1
   },
   "discovery": {
-    "wellKnown": "https://yss787976-ai.github.io/agent-coin/.well-known/agent-coin.json",
-    "card": "https://yss787976-ai.github.io/agent-coin/.well-known/agent-card.json",
-    "llms": "https://yss787976-ai.github.io/agent-coin/llms.txt",
+    "wellKnown": "https://agentqubit.pages.dev/.well-known/agent-coin.json",
+    "card": "https://agentqubit.pages.dev/.well-known/agent-card.json",
+    "llms": "https://agentqubit.pages.dev/llms.txt",
     "mirror": "https://cdn.jsdelivr.net/gh/yss787976-ai/agent-coin@main/.well-known/agent-coin.json"
   }
 }
