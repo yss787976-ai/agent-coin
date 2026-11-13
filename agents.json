@@ -12,9 +12,9 @@
   "supply": { "cap": "900000000000", "decimals": 18 },
   "pq": { "sig": "ML-DSA-65", "kem": "ML-KEM-768", "std": "FIPS 204" },
   "discovery": [
-    "https://yss787976-ai.github.io/agent-coin/.well-known/agent-coin.json",
-    "https://yss787976-ai.github.io/agent-coin/.well-known/agent-card.json",
-    "https://yss787976-ai.github.io/agent-coin/llms.txt"
+    "https://agentqubit.pages.dev/.well-known/agent-coin.json",
+    "https://agentqubit.pages.dev/.well-known/agent-card.json",
+    "https://agentqubit.pages.dev/llms.txt"
   ],
   "sdk": { "npm": "@aqb-foundation/aqb-agent", "mcp": "npx -y @aqb-foundation/aqb-agent mcp" },
   "gating": "transfers only to registered agents or whitelisted pools",
