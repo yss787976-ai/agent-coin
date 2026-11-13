@@ -1,0 +1,15 @@
+node_modules
+.git
+.env
+.env.*
+founder
+seed
+artifacts
+test
+contracts
+vendor
+scripts
+notes
+publish
+*.tgz
+*.log
