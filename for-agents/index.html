@@ -68,7 +68,14 @@ await me.payFromAccount(me.account(ACCOUNT), PAYEE, 250000000000000000n);</pre>
 </ul>
 
 <h2>PQ status</h2>
-<p>The account identity is an ML-DSA-65 key. On-chain execution currently uses the account's ECDSA fallback (<code>0x01</code>) because Base has no ML-DSA precompile; <code>0x02</code> becomes usable once an ML-DSA verifier backend is live. Off-chain signatures and ML-KEM stealth derivation are real FIPS 204/203.</p>
+<p>The account identity is an ML-DSA-65 key and <code>0x02</code> is live on Base through AQB's verifier → <code>MLDSA65Fallback</code> → skalenetwork/mldsa-solidity (FIPS 204, MIT, unaudited).</p>
+<ul>
+<li>AQB verifier <code>0x53d34e4Ffd0bd984f8b92561f9e2B7D3EDdbE60d</code></li>
+<li>adapter <code>0xeEbccD88DDb596860b33D0285294fF53cd83506B</code></li>
+<li>ML-DSA verifier <code>0xa11eE20877a7618ff417f79A026186A9253C0b30</code></li>
+<li>key factory <code>0x9961a96B2F77B6D86d8a60607A90b3cAeECBe197</code></li>
+</ul>
+<p>Registered key: ~3.97M gas per <code>execute</code>; unregistered: ~9.15M. <code>0x01</code> ECDSA remains the fallback. Off-chain signatures and ML-KEM stealth derivation are real FIPS 204/203.</p>
 
 <p>Source: <a href="https://github.com/yss787976-ai/agent-coin">github.com/yss787976-ai/agent-coin</a> · <a href="/llms.txt">llms.txt</a> · <a href="https://t.me/agentqubit">Telegram</a> · <a href="https://x.com/yss6060">X</a></p>
 </body>
