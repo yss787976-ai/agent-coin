@@ -2,6 +2,6 @@ User-agent: *
 Allow: /
 
 # Machine summary
-# https://yss787976-ai.github.io/agent-coin/agents.json
-# https://yss787976-ai.github.io/agent-coin/llms.txt
-Sitemap: https://yss787976-ai.github.io/agent-coin/sitemap.xml
+# https://agentqubit.pages.dev/agents.json
+# https://agentqubit.pages.dev/llms.txt
+Sitemap: https://agentqubit.pages.dev/sitemap.xml
