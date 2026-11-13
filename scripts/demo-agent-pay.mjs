@@ -1,43 +1,94 @@
 #!/usr/bin/env node
-// 60-second demo: one agent pays another agent in AQB, the payee redeems for USDC.
-// Read-only until --send is passed. Usage:
-//   node scripts/demo-agent-pay.mjs                 # quote + plan only
-//   PRIVATE_KEY=0x... node scripts/demo-agent-pay.mjs --send
-import { JsonRpcProvider, Wallet, Contract, parseUnits, formatUnits } from "ethers";
-import * as PQ from "../pq/pq.mjs";
+// End-to-end agent payment demo on Base mainnet:
+//   payer agent -> payee agent -> payee redeems to USDC.
+//
+// Dry run:
+//   node --env-file=.env scripts/demo-agent-pay.mjs
+// Broadcast (defaults to two funded seed agents):
+//   node --env-file=.env scripts/demo-agent-pay.mjs --send
+//
+// Env:
+//   PAYER_ACCOUNT / PRIVATE_KEY   explicit payer account + its ECDSA fallback
+//   PAYEE / PAYEE_KEY / PAYEE_ACCOUNT
+//   AMOUNT                        AQB amount, default 0.01
+//
+// The default payer is a funded seed agent, not the founder wallet: coins in the
+// founder wallet are unsold allotment and must not enter circulation without a
+// GenesisSale dollar behind them.
+import fs from "node:fs";
+import { parseUnits, formatEther, formatUnits } from "ethers";
+import { AqbAgent } from "../client/aqb.mjs";
 
-const RPC = process.env.BASE_RPC || "https://mainnet.base.org";
-const TOKEN = "0x2C54F202B565086B6d8D2226Edb67AC3E14C39d1";
-const VAULT_ABI = [
-  "function balanceOf(address) view returns (uint256)",
-  "function redeem(uint256) returns (uint256)",
-  "function transfer(address,uint256) returns (bool)",
-];
-const AMOUNT = process.env.AMOUNT || "0.25";
+const SEND = process.argv.includes("--send");
+const d = fs.existsSync("deployment.json") ? JSON.parse(fs.readFileSync("deployment.json", "utf8")) : null;
+const seeds = fs.existsSync("seed/wallets.json") ? JSON.parse(fs.readFileSync("seed/wallets.json", "utf8")) : [];
+const amount = parseUnits(process.env.AMOUNT || "0.01", 18);
 
-const provider = new JsonRpcProvider(RPC);
-const key = process.env.PRIVATE_KEY;
-const payer = key ? new Wallet(key, provider) : null;
-const payee = process.env.PAYEE || "0x9eA52810f31768b1886cba9eAf917F4152f53042"; // PQ agent account
+const rpc = process.env.BASE_RPC || process.env.AQB_RPC;
+const token = process.env.AQB_TOKEN || d?.token;
+const registry = process.env.AQB_REGISTRY || d?.registry;
+if (!token || !registry) throw new Error("set AQB_TOKEN and AQB_REGISTRY");
 
-console.log("1. chain      ", (await provider.getNetwork()).chainId.toString());
-console.log("2. amount     ", AMOUNT, "AQB  (= ", AMOUNT, "USDC redeemable )");
-if (payer) {
-  const token = new Contract(TOKEN, VAULT_ABI, payer);
-  const bal = await token.balanceOf(payer.address);
-  console.log("3. payer      ", payer.address, "balance", formatUnits(bal, 18));
-  console.log("4. payee      ", payee);
-  if (process.argv.includes("--send")) {
-    const pqKey = await PQ.generate();
-    console.log("5. pq key     ", pqKey.hash.slice(0, 18) + "…  (ML-DSA-65)");
-    const tx = await token.transfer(payee, parseUnits(AMOUNT, 18));
-    console.log("6. sent       ", tx.hash);
-    console.log("7. explorer   ", "https://basescan.org/tx/" + tx.hash);
-  } else {
-    console.log("5. dry run — pass --send with PRIVATE_KEY to broadcast");
-  }
+const reader = new AqbAgent({ rpc, token, registry });
+
+const funded = [];
+for (const s of seeds) {
+  if ((await reader.balance(s.address)) >= amount) funded.push(s);
+}
+
+let payerAccount = process.env.PAYER_ACCOUNT;
+let payerKey;
+if (payerAccount) {
+  payerKey = process.env.PRIVATE_KEY || process.env.PAYER_KEY;
 } else {
-  console.log("3. payer       (set PRIVATE_KEY to sign)");
-  console.log("4. payee      ", payee);
-  console.log("5. dry run");
+  const s = funded[0];
+  if (!s) throw new Error("no funded seed payer; set PAYER_ACCOUNT + PRIVATE_KEY");
+  payerAccount = s.address;
+  payerKey = process.env.PAYER_KEY || s.key;
+}
+
+let payee = process.env.PAYEE;
+let payeeKey = process.env.PAYEE_KEY;
+let payeeAccount = process.env.PAYEE_ACCOUNT;
+if (!payee) {
+  const s = funded.find((x) => x.address.toLowerCase() !== payerAccount.toLowerCase());
+  if (!s) throw new Error("no funded seed payee; set PAYEE");
+  payee = s.address;
+  payeeKey = payeeKey || s.key;
+  payeeAccount = payeeAccount || s.address;
+}
+
+console.log("chain      ", (await reader.provider.getNetwork()).chainId.toString());
+console.log("payer      ", payerAccount, "agent:", await reader.isAgent(payerAccount));
+console.log("payee      ", payee, "agent:", await reader.isAgent(payee));
+console.log("amount     ", formatEther(amount), "AQB =", formatUnits(amount / 10n ** 12n, 6), "USDC");
+console.log("payer AQB  ", formatEther(await reader.balance(payerAccount)));
+console.log("payee AQB  ", formatEther(await reader.balance(payee)));
+console.log("payee USDC ", formatUnits(await reader.usdBalance(payee), 6));
+
+if (!SEND) {
+  console.log("dry run — pass --send to broadcast");
+  process.exit(0);
+}
+if (!payerKey) throw new Error("payer key required for --send");
+
+const payer = new AqbAgent({ rpc, privateKey: payerKey, token, registry });
+const before = await reader.balance(payee);
+const payTx = await payer.payFromAccount(payer.account(payerAccount), payee, amount);
+const after = await reader.balance(payee);
+console.log("pay tx     ", payTx);
+console.log("received   ", formatEther(after - before), "AQB");
+
+if (payeeKey) {
+  const payeeClient = new AqbAgent({ rpc, privateKey: payeeKey, token, registry });
+  const usdcAddress = payeeAccount || payeeClient.signer.address;
+  const usdcBefore = await reader.usdBalance(usdcAddress);
+  const redeemTx = payeeAccount
+    ? await payeeClient.redeemFromAccount(payeeClient.account(payeeAccount), amount)
+    : await payeeClient.cashOut(amount);
+  const usdcAfter = await reader.usdBalance(usdcAddress);
+  console.log("redeem tx  ", redeemTx);
+  console.log("redeemed   ", formatUnits(usdcAfter - usdcBefore, 6), "USDC");
+} else {
+  console.log("payee key not set — redeem skipped");
 }
