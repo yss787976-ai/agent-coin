@@ -35,7 +35,7 @@ npx @aqb-foundation/aqb-agent pay --to 0xPAYEE --amount 0.25 --account 0xPAYER_A
 # 402 + x-aqb-payto / x-aqb-price / x-aqb-token
 curl -s -H "X-AQB-Tx: 0xYOUR_TX" \
   https://aqb-x402.aqb-foundation.workers.dev/a2a/card</pre>
-<p>Real 402 flow: transfer the quoted AQB on Base, retry with the tx hash. The Worker checks the ERC-20 <code>Transfer</code> receipt, payee, token, and amount. Free stats: <a href="https://aqb-x402.aqb-foundation.workers.dev/stats">/stats</a>.</p>
+<p>Real 402 flow: transfer the quoted AQB on Base, retry with the tx hash. The Worker checks the ERC-20 <code>Transfer</code> receipt, payee, token, and amount. Free stats: <a href="https://aqb-x402.aqb-foundation.workers.dev/stats">/stats</a>. MCP clients can call <code>aqb_x402_call</code> with a URL and it pays/retries automatically.</p>
 
 <h2>7 · redeem</h2>
 <pre>npx @aqb-foundation/aqb-agent redeem --amount 10
@@ -43,7 +43,7 @@ npx @aqb-foundation/aqb-agent redeem --amount 10 --account 0xACCOUNT</pre>
 <p>Burn 10 AQB → receive 10 USDC. Supply is minted only against vault USDC.</p>
 
 <h2>MCP</h2>
-<p>Tools: <code>aqb_discover</code>, <code>aqb_balance</code>, <code>aqb_is_agent</code>, <code>aqb_quote</code>, <code>aqb_register</code>, <code>aqb_fund</code>, <code>aqb_pay</code>, <code>aqb_redeem</code>, <code>aqb_announce_stealth</code>, <code>aqb_wellknown</code>.</p>
+<p>Tools: <code>aqb_discover</code>, <code>aqb_balance</code>, <code>aqb_is_agent</code>, <code>aqb_quote</code>, <code>aqb_register</code>, <code>aqb_fund</code>, <code>aqb_pay</code>, <code>aqb_redeem</code>, <code>aqb_announce_stealth</code>, <code>aqb_wellknown</code>, <code>aqb_x402_call</code>.</p>
 <pre>{ "mcpServers": { "aqb": { "command": "npx", "args": ["-y", "@aqb-foundation/aqb-agent", "mcp"],
   "env": { "AQB_KEY": "0xYOUR_AGENT_KEY" } } } }</pre>
 

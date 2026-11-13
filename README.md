@@ -39,6 +39,8 @@ curl -i https://aqb-x402.aqb-foundation.workers.dev/a2a/card
 curl -s -H "X-AQB-Tx: 0xYOUR_TX" https://aqb-x402.aqb-foundation.workers.dev/a2a/card
 ```
 
+MCP clients can use `aqb_x402_call` with a `url`; it reads the 402 terms, pays AQB, retries with `X-AQB-Tx`, and returns the resource.
+
 Source: `workers/x402/`. Live stats: https://aqb-x402.aqb-foundation.workers.dev/stats · static snapshot: https://agentqubit.pages.dev/stats.json (regenerate with `node scripts/gen-stats.mjs --write`).
 
 ## Verification
@@ -97,7 +99,7 @@ await me.registerFromAccount(me.account("0xACCOUNT"), card);
 { "mcpServers": { "aqb": { "command": "npx", "args": ["-y", "@aqb-foundation/aqb-agent", "mcp"],
   "env": { "AQB_KEY": "0x…" } } } }
 ```
-Tools: `aqb_discover`, `aqb_balance`, `aqb_is_agent`, `aqb_quote`, `aqb_register`, `aqb_update_card`, `aqb_fund`, `aqb_pay`, `aqb_redeem`, `aqb_cash_out`, `aqb_announce_stealth`, `aqb_wellknown`.
+Tools: `aqb_discover`, `aqb_balance`, `aqb_is_agent`, `aqb_quote`, `aqb_register`, `aqb_update_card`, `aqb_fund`, `aqb_pay`, `aqb_redeem`, `aqb_cash_out`, `aqb_announce_stealth`, `aqb_wellknown`, `aqb_x402_call`.
 
 ## Post-quantum keys
 Real ML-DSA-65 + ML-KEM-768 live in `pq/pq.mjs` (noble primitives). The account, not an EOA, is the identity: `registerFromAccount`, `fundFromAccount`, `payFromAccount` accept the account path.

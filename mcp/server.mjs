@@ -32,6 +32,7 @@ const TOOLS = [
   { name: "aqb_cash_out", description: "Alias for aqb_redeem", inputSchema: { type: "object", properties: { aqb: { type: "string" }, account: { type: "string" } }, required: ["aqb"] } },
   { name: "aqb_announce_stealth", description: "Publish a stealth address for a payer from a PQSmartAccount", inputSchema: { type: "object", properties: { account: { type: "string" }, ephPubKey: { type: "string" }, sharedSecret: { type: "string" }, metaHash: { type: "string" } }, required: ["account", "ephPubKey", "sharedSecret"] } },
   { name: "aqb_wellknown", description: "Generate your own /.well-known/agent-coin.json", inputSchema: { type: "object", properties: { token: { type: "string" }, registry: { type: "string" }, verifier: { type: "string" }, pool: { type: "string" } } } },
+  { name: "aqb_x402_call", description: "Call an AQB x402 endpoint: GET, read the 402 terms, pay AQB, retry with X-AQB-Tx, return the resource", inputSchema: { type: "object", properties: { url: { type: "string" }, method: { type: "string", enum: ["GET", "POST"] }, body: { type: "string" }, account: { type: "string" } }, required: ["url"] } },
 ];
 
 function requireArg(a, name) {
@@ -116,6 +117,35 @@ async function run(name, a) {
         pool: a.pool || PAIR,
         sale: SALE,
       });
+    case "aqb_x402_call": {
+      const url = requireArg(a, "url");
+      const method = a.method || "GET";
+      const first = await fetch(url, { method, body: a.body });
+      if (first.status !== 402) {
+        return { status: first.status, paid: false, body: await first.text() };
+      }
+      const price = first.headers.get("x-aqb-price");
+      const payTo = first.headers.get("x-aqb-payto");
+      if (!price || !payTo) throw new Error("402 without x-aqb-price/x-aqb-payto");
+      const amount = BigInt(price);
+      const acc = accountOf(c, a);
+      const tx = acc
+        ? await c.payFromAccount(acc, addr(payTo), amount)
+        : await c.pay(addr(payTo), amount);
+      const second = await fetch(url, {
+        method,
+        body: a.body,
+        headers: { "x-aqb-tx": tx },
+      });
+      return {
+        status: second.status,
+        paid: true,
+        tx,
+        aqb: formatEther(amount),
+        payTo: addr(payTo),
+        body: await second.text(),
+      };
+    }
     default:
       throw new Error(`unknown tool ${name}`);
   }
@@ -134,7 +164,7 @@ process.stdin.on("data", async (chunk) => {
     try { m = JSON.parse(line); } catch { continue; }
     try {
       if (m.method === "initialize") {
-        send({ jsonrpc: "2.0", id: m.id, result: { protocolVersion: "2024-11-05", capabilities: { tools: {} }, serverInfo: { name: "aqb", version: "1.0.3" } } });
+        send({ jsonrpc: "2.0", id: m.id, result: { protocolVersion: "2024-11-05", capabilities: { tools: {} }, serverInfo: { name: "aqb", version: "1.0.5" } } });
       } else if (m.method === "tools/list") {
         send({ jsonrpc: "2.0", id: m.id, result: { tools: TOOLS } });
       } else if (m.method === "tools/call") {

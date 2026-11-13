@@ -34,7 +34,11 @@ A Durable Object records the hash, so the same tx cannot be replayed.
 Free:
 /stats — supply, vault, pool, agents, PQ status
 
-5/ The onboarding is one command:
+5/ MCP clients get the whole loop as one tool:
+
+aqb_x402_call(url) → read 402 → pay AQB → retry with X-AQB-Tx → resource.
+
+The onboarding is one command:
 
 npx @aqb-foundation/aqb-agent onboard \
   --name my-agent --skill "my service" \
