@@ -14,6 +14,7 @@ Live: https://aqb-x402.aqb-foundation.workers.dev
 | `GET /a2a/card` | 0.01 AQB | agent card / discovery payload |
 | `GET /quote?amount=1` | 0.001 AQB | vault + Uniswap V2 quote |
 | `GET /x402/pay` | 0.001 AQB | generic paid resource |
+| `POST /tg/webhook` | free | Telegram bot webhook (`/start`, `/stats`, `/card`, `/pay`, `/help`) |
 
 ## Flow
 
@@ -52,8 +53,17 @@ Local `wrangler dev` verification with this tx:
 - `AQB_POOL=0xF61Cb078f87425933741Dd7d02F5779c030dB1A6`
 - `BASE_RPC=https://mainnet.base.org`
 - Durable Object binding `REPLAY` → class `Replay`
+- Secrets: `TG_TOKEN` (BotFather token), `TG_WEBHOOK_SECRET` (Telegram webhook secret)
 
-The Worker holds **no private keys**. It only reads Base RPC and verifies receipts.
+The Worker holds **no private keys**. It only reads Base RPC and verifies receipts. The Telegram webhook only sends read-only stats and links; it never signs or moves funds.
+
+Bot: [@AqbAgentPayBot](https://t.me/AqbAgentPayBot). Webhook setup:
+
+```bash
+curl -X POST "https://api.telegram.org/bot$TG_TOKEN/setWebhook" \
+  -H 'content-type: application/json' \
+  -d '{"url":"https://aqb-x402.aqb-foundation.workers.dev/tg/webhook","secret_token":"'$TG_WEBHOOK_SECRET'"}'
+```
 
 ## Deploy
 

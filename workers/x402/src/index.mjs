@@ -228,6 +228,88 @@ export class Replay {
   }
 }
 
+async function telegramReply(env, chatId, text) {
+  if (!env.TG_TOKEN) return { ok: false, error: "TG_TOKEN not configured" };
+  const res = await fetch(`https://api.telegram.org/bot${env.TG_TOKEN}/sendMessage`, {
+    method: "POST",
+    headers: { "content-type": "application/json" },
+    body: JSON.stringify({ chat_id: chatId, text: text.slice(0, 4000), disable_web_page_preview: true }),
+  });
+  return { ok: res.ok, status: res.status };
+}
+
+async function telegramUpdate(env, update) {
+  const msg = update.message || update.channel_post;
+  if (!msg || !msg.chat?.id) return { ignored: true };
+  const text = (msg.text || "").trim();
+  const chatId = msg.chat.id;
+  const origin = "https://aqb-x402.aqb-foundation.workers.dev";
+  let reply;
+
+  if (text.startsWith("/start")) {
+    reply = [
+      "AQB — agent payments on Base.",
+      "1 AQB = 1 USDC from an on-chain vault. ML-DSA-65 identities.",
+      "",
+      "Commands:",
+      "/stats — live supply, vault, pool, agents",
+      "/card — paid x402 agent card (0.01 AQB)",
+      "/pay — one-command onboarding and payment",
+      "/help — links",
+    ].join("\n");
+  } else if (text.startsWith("/stats")) {
+    const s = await stats(env);
+    reply = [
+      `AQB live stats (${s.asOf})`,
+      `Circulating: ${s.circulatingAQB} AQB`,
+      `Vault: ${s.vaultUSDC} USDC`,
+      `Collateral ratio: ${s.collateralRatio}`,
+      `Agents: ${s.agents}`,
+      `Pool: ${s.poolReserves.aqb} AQB / ${s.poolReserves.usdc} USDC`,
+      `Price: ${s.poolPriceUSDC} USDC`,
+      "",
+      `${origin}/stats`,
+    ].join("\n");
+  } else if (text.startsWith("/card")) {
+    reply = [
+      "Paid AQB x402 resource",
+      `${origin}/a2a/card`,
+      "Price: 0.01 AQB on Base",
+      `Pay to: ${CFG(env).payee}`,
+      "Then retry with header X-AQB-Tx: <txHash>.",
+      "The Worker verifies the Base receipt and rejects reuse.",
+      "",
+      `Free stats: ${origin}/stats`,
+    ].join("\n");
+  } else if (text.startsWith("/pay")) {
+    reply = [
+      "Onboard an agent:",
+      "npx @aqb-foundation/aqb-agent onboard --name my-agent --skill \"my service\" --endpoint https://example.com/a2a --price 0.05",
+      "",
+      "Pay an agent:",
+      "npx @aqb-foundation/aqb-agent pay --to 0xPAYEE --amount 0.25",
+      "",
+      "MCP x402: aqb_x402_call(url)",
+      "npm 1.0.5",
+    ].join("\n");
+  } else if (text.startsWith("/help") || text.startsWith("/")) {
+    reply = [
+      "AQB links:",
+      "Site: https://agentqubit.pages.dev",
+      "Stats: https://agentqubit.pages.dev/stats.json",
+      "npm: https://www.npmjs.com/package/@aqb-foundation/aqb-agent",
+      "Repo: https://github.com/yss787976-ai/agent-coin",
+      "",
+      "Commands: /start /stats /card /pay /help",
+    ].join("\n");
+  } else {
+    reply = "Use /help for commands.";
+  }
+
+  const sent = await telegramReply(env, chatId, reply);
+  return { chatId, sent };
+}
+
 function card(env, request) {
   const cfg = CFG(env);
   const origin = new URL(request.url).origin;
@@ -254,6 +336,17 @@ export default {
     const cfg = CFG(env);
 
     try {
+      if (url.pathname === "/tg/webhook") {
+        if (request.method !== "POST") return json({ error: "POST only" }, 405, CORS);
+        if (!env.TG_WEBHOOK_SECRET) return json({ error: "webhook not configured" }, 503, CORS);
+        if (request.headers.get("x-telegram-bot-api-secret-token") !== env.TG_WEBHOOK_SECRET) {
+          return json({ error: "forbidden" }, 403, CORS);
+        }
+        const update = await request.json();
+        const result = await telegramUpdate(env, update);
+        return json({ ok: true, result }, 200, CORS);
+      }
+
       if (url.pathname === "/" || url.pathname === "/health") {
         return json({
           ok: true,
