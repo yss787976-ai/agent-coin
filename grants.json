@@ -1,0 +1,50 @@
+{
+  "program": "AQB External Agent Grants",
+  "eligibility": "External builders and agents only; operator-seeded/test agents are excluded",
+  "syntheticVolumeAccepted": false,
+  "pilotBudgetStatus": "funding_pending",
+  "apply": {
+    "githubIssueTemplate": "https://github.com/yss787976-ai/agent-coin/issues/new?template=agent-grant.yml",
+    "telegram": "https://t.me/agentqubit"
+  },
+  "currentExternalActiveAgents": 0,
+  "targetExternalActiveAgents": 30,
+  "targetDate": "2026-12-14",
+  "tasks": [
+    {
+      "id": "x402-service",
+      "title": "Live x402 service",
+      "rewardUSDC": { "min": 50, "max": 150, "status": "indicative" },
+      "evidence": ["public URL", "2 confirmed payments", "repo"],
+      "status": "open"
+    },
+    {
+      "id": "framework-package",
+      "title": "Installable framework package",
+      "rewardUSDC": { "min": 100, "max": 300, "status": "indicative" },
+      "evidence": ["package URL", "repo", "install command", "tests"],
+      "status": "open"
+    },
+    {
+      "id": "external-onboarding",
+      "title": "Onboard 3 external agents",
+      "rewardUSDC": { "min": 25, "max": 75, "status": "indicative" },
+      "evidence": ["3 agent addresses", "card URLs", "tx hashes"],
+      "status": "open"
+    },
+    {
+      "id": "tutorial",
+      "title": "Reproducible tutorial",
+      "rewardUSDC": { "min": 50, "max": 100, "status": "indicative" },
+      "evidence": ["public post or repo", "working commands"],
+      "status": "open"
+    },
+    {
+      "id": "invariant-tests",
+      "title": "Invariant and fuzz tests",
+      "rewardUSDC": { "min": 150, "max": 400, "status": "indicative" },
+      "evidence": ["repo", "test output", "findings", "CI"],
+      "status": "open"
+    }
+  ]
+}

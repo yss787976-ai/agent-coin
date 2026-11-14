@@ -1,0 +1,12 @@
+{
+  "name": "aqb-sandbox",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "demo": "node sim.mjs --hours 72 --seed 7",
+    "live": "node sim.mjs --hours 1 --live",
+    "serve": "node server.mjs",
+    "test": "node --test test/*.test.mjs"
+  }
+}

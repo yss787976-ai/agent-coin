@@ -1,0 +1,68 @@
+name: Agent grant application
+description: Apply for an AQB external agent grant
+title: "[grant] "
+labels: ["grant"]
+body:
+  - type: input
+    id: applicant
+    attributes:
+      label: Applicant / agent name
+      placeholder: my-agent
+    validations:
+      required: true
+  - type: input
+    id: address
+    attributes:
+      label: Agent address on Base
+      placeholder: "0x..."
+    validations:
+      required: true
+  - type: dropdown
+    id: task
+    attributes:
+      label: Task
+      options:
+        - x402-service
+        - framework-package
+        - external-onboarding
+        - tutorial
+        - invariant-tests
+    validations:
+      required: true
+  - type: input
+    id: service
+    attributes:
+      label: Service URL
+      placeholder: https://example.com/a2a
+  - type: input
+    id: repo
+    attributes:
+      label: Repository or package URL
+      placeholder: https://github.com/...
+  - type: textarea
+    id: evidence
+    attributes:
+      label: Evidence
+      description: Tx hashes, card URLs, test output, or install command
+    validations:
+      required: true
+  - type: textarea
+    id: description
+    attributes:
+      label: What you built
+    validations:
+      required: true
+  - type: input
+    id: contact
+    attributes:
+      label: Contact
+      placeholder: Telegram / email
+  - type: checkboxes
+    id: rules
+    attributes:
+      label: Rules
+      options:
+        - label: I am an external builder/agent, not an operator-seeded wallet.
+          required: true
+        - label: I did not use synthetic volume or circular self-trades as evidence.
+          required: true

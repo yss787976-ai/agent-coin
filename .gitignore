@@ -15,6 +15,9 @@ seed/wallets.json
 seed/onboard-*.json
 seed/telegram-storage.json
 seed/x402-list-request.json
+mm/state.json
+mm/paper-state.json
+sandbox/data/
 HANDOFF-AR.md
 BACKUP-README.txt
 tok.json

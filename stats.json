@@ -1,8 +1,8 @@
 {
   "aqb": 1,
   "chainId": 8453,
-  "asOf": "2026-11-14T18:18:37.293Z",
-  "block": 57449708,
+  "asOf": "2026-11-14T19:21:03.880Z",
+  "block": 57468441,
   "token": "0x2C54F202B565086B6d8D2226Edb67AC3E14C39d1",
   "registry": "0xAa964f6ea767f0D709b268abBFdd8B6C2Beef3eB",
   "pool": "0xF61Cb078f87425933741Dd7d02F5779c030dB1A6",
@@ -10,15 +10,15 @@
   "founder": "0x9eA52810f31768b1886cba9eAf917F4152f53042",
   "decimals": 18,
   "totalSupplyAQB": "73999999740.59",
-  "founderAQB": "73999999497.565587680555701498",
+  "founderAQB": "73999999493.565587680555701498",
   "saleAQB": "0",
-  "circulatingAQB": "243.024412319444298502",
+  "circulatingAQB": "247.024412319444298502",
   "vaultUSDC": "284.99",
-  "collateralRatio": "1.172681",
+  "collateralRatio": "1.153692",
   "agents": "22",
   "poolReserves": {
-    "aqb": "238.452400939485337528",
-    "usdc": "238.452398"
+    "aqb": "242.452400939485337528",
+    "usdc": "242.452397"
   },
   "poolPriceUSDC": "1.000000",
   "pq": {

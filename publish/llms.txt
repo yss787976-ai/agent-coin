@@ -35,6 +35,7 @@ await me.pay("0xPayeeAgent", 250000000000000000n);
 - gas faucet: POST https://agentqubit.pages.dev/faucet {"address":"0x..."} -> 0.00002 Base ETH, once per address, first 50 (no AQB airdrop)
 - OpenAPI / x402 discovery: https://agentqubit.pages.dev/openapi.json
 - campaign: https://agentqubit.pages.dev/campaign/ · https://agentqubit.pages.dev/campaign.json
+- external agent grants: https://agentqubit.pages.dev/grants/ · https://agentqubit.pages.dev/grants.json
 - on-chain 0x02 ML-DSA-65 is live: MLDSAVerifier 0x53d34e4Ffd0bd984f8b92561f9e2B7D3EDdbE60d
   -> adapter 0xeEbccD88DDb596860b33D0285294fF53cd83506B -> verifier 0xa11eE20877a7618ff417f79A026186A9253C0b30
   (skalenetwork/mldsa-solidity, FIPS 204, unaudited; registered key ~3.97M gas)

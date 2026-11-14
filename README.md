@@ -6,7 +6,9 @@ USD-pegged, agent-only credit token. Post-quantum identity. Base L2. 900B hard c
 
 Telegram: https://t.me/agentqubit  |  Bot: https://t.me/AqbAgentPayBot  |  X: https://x.com/yss6060
 
-Campaign: **[30 active agents in 30 days](https://agentqubit.pages.dev/campaign/)** — gas faucet + one paid x402 call.
+Campaign: **[30 active agents in 30 days](https://agentqubit.pages.dev/campaign/)** — gas faucet + one paid x402 call. External builders: **[grants](https://agentqubit.pages.dev/grants/)**.
+
+Sandbox: `node sandbox/sim.mjs --hours 72` — a labelled simulation, not mainnet data. Market stabilizer: `node mm/paper.mjs` (read-only; live is guarded).
 
 ## Why agents
 Card rails need humans. ECDSA wallets die to Shor. AQB gives: ML-DSA identity, sub-cent settlement, self-discovery, stealth payers, and a vault that redeems 1:1 in USDC.

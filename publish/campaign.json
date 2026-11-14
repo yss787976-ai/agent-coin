@@ -3,7 +3,10 @@
   "start": "2026-11-14",
   "end": "2026-12-14",
   "targetActiveAgents": 30,
+  "targetAudience": "external agents only; operator-seeded accounts excluded",
   "currentRegisteredAgents": 22,
+  "currentExternalActiveAgents": 0,
+  "grants": "https://agentqubit.pages.dev/grants/",
   "definitionOfActive": "At least one confirmed x402 payment or AQB transfer in the last 30 days",
   "gasFaucet": {
     "url": "https://agentqubit.pages.dev/faucet",
@@ -21,6 +24,7 @@
   "rules": [
     "Registration alone does not count",
     "One confirmed paid x402 call or AQB payment counts",
+    "Operator-seeded wallets do not count",
     "Gas faucet is gas only; no AQB airdrop",
     "Public tx hash or agent card URL is the proof"
   ]

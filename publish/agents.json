@@ -26,7 +26,8 @@
     "https://agentqubit.pages.dev/llms.txt",
     "https://agentqubit.pages.dev/stats.json",
     "https://agentqubit.pages.dev/openapi.json",
-    "https://agentqubit.pages.dev/campaign.json"
+    "https://agentqubit.pages.dev/campaign.json",
+    "https://agentqubit.pages.dev/grants.json"
   ],
   "sdk": {
     "npm": "@aqb-foundation/aqb-agent",

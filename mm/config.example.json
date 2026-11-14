@@ -1,0 +1,10 @@
+{
+  "target": 1.0,
+  "band": 0.01,
+  "maxTradeUSDC": 1.6,
+  "maxTradeAQB": 1.6,
+  "maxDailyUSDC": 5,
+  "cooldownMs": 3600000,
+  "slippageBps": 100,
+  "note": "Trades only outside 0.99-1.01. Not a volume generator."
+}

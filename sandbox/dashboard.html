@@ -1,0 +1,94 @@
+<!doctype html><meta charset="utf-8"><title>AQB sandbox — simulation</title>
+<style>
+  :root { color-scheme: dark; --bg:#0d1117; --panel:#161b22; --line:#30363d; --text:#e6edf3; --muted:#8b949e; --up:#3fb950; --down:#f85149; --accent:#58a6ff; }
+  * { box-sizing: border-box; }
+  body { margin:0; font:14px/1.45 ui-monospace,SFMono-Regular,Menlo,monospace; background:var(--bg); color:var(--text); }
+  .banner { background:#9e6a03; color:#fff; text-align:center; padding:10px; font-weight:700; letter-spacing:.04em; }
+  main { max-width:1100px; margin:0 auto; padding:24px; }
+  h1 { font-size:22px; margin:0 0 4px; }
+  .muted { color:var(--muted); }
+  .cards { display:grid; grid-template-columns:repeat(auto-fit,minmax(150px,1fr)); gap:10px; margin:18px 0; }
+  .card { background:var(--panel); border:1px solid var(--line); border-radius:8px; padding:12px; }
+  .card b { display:block; font-size:20px; margin-top:4px; }
+  .panel { background:var(--panel); border:1px solid var(--line); border-radius:8px; padding:12px; }
+  canvas { width:100%; height:380px; display:block; }
+  .legend { color:var(--muted); font-size:12px; margin-top:6px; }
+  table { width:100%; border-collapse:collapse; margin-top:16px; font-size:12px; }
+  th,td { text-align:right; border-bottom:1px solid var(--line); padding:6px; }
+  .up { color:var(--up); } .down { color:var(--down); }
+</style>
+<div class="banner">SIMULATION — NOT MAINNET, NOT REAL FUNDS</div>
+<main>
+  <h1>AQB agent sandbox</h1>
+  <div class="muted">Simulated pool + simulated agents. No RPC, no keys, no real transactions.</div>
+  <div class="cards" id="cards"></div>
+  <div class="panel">
+    <canvas id="chart" width="1000" height="380"></canvas>
+    <div class="legend">Price (left) · volume USDC (bars, right axis implied)</div>
+  </div>
+  <div class="panel" style="margin-top:16px">
+    <h2 style="font-size:15px;margin:0 0 8px">Last 12 hours</h2>
+    <table><thead><tr><th>Time</th><th>Open</th><th>High</th><th>Low</th><th>Close</th><th>Volume USDC</th><th>Active</th></tr></thead><tbody id="rows"></tbody></table>
+  </div>
+</main>
+<script>
+const fmt = (n,d=4) => Number(n).toLocaleString(undefined,{minimumFractionDigits:d,maximumFractionDigits:d});
+async function load() {
+  try {
+    const [candles, state] = await Promise.all([
+      fetch("data/candles.json",{cache:"no-store"}).then(r=>r.json()),
+      fetch("data/state.json",{cache:"no-store"}).then(r=>r.json()),
+    ]);
+    renderCards(state, candles);
+    draw(candles);
+    renderRows(candles);
+  } catch (e) {
+    document.getElementById("cards").innerHTML = '<div class="card">Run <b>node sandbox/sim.mjs --hours 72</b> first.</div>';
+  }
+}
+function renderCards(s, c) {
+  const last = c[c.length-1] || {};
+  const prev = c[c.length-2] || last;
+  const chg = prev.close ? ((last.close/prev.close-1)*100) : 0;
+  const cards = [
+    ["Price", fmt(last.close,6), chg>=0?"up":"down", (chg>=0?"+":"")+chg.toFixed(2)+"%"],
+    ["24h trades", last.trades ?? 0, "", "hour"],
+    ["Active agents", last.activeAgents ?? 0, "", "hour"],
+    ["Service payments", s.servicePayments ?? 0, "", "total"],
+    ["Pool AQB", fmt(s.pool?.aqb || 0,2), "", "sim"],
+    ["Fees USDC", fmt(s.feesUSDC || 0,2), "", "sim"],
+  ];
+  document.getElementById("cards").innerHTML = cards.map(([k,v,cls,sub]) =>
+    `<div class="card">${k}<b class="${cls}">${v}</b><span class="muted">${sub}</span></div>`).join("");
+}
+function draw(c) {
+  const cv = document.getElementById("chart"), ctx = cv.getContext("2d");
+  const W = cv.width, H = cv.height, pad = {l:58,r:18,t:18,b:28};
+  ctx.clearRect(0,0,W,H);
+  if (!c.length) return;
+  const min = Math.min(...c.map(x=>x.low)), max = Math.max(...c.map(x=>x.high));
+  const padY = (max-min)*0.08 || 0.01;
+  const lo = min-padY, hi = max+padY;
+  const maxV = Math.max(...c.map(x=>x.volumeUSDC), 1);
+  const x = i => pad.l + (i+0.5)*((W-pad.l-pad.r)/c.length);
+  const y = p => pad.t + (hi-p)/(hi-lo)*(H-pad.t-pad.b);
+  const bw = Math.max(2, (W-pad.l-pad.r)/c.length*0.55);
+  ctx.strokeStyle="#30363d"; ctx.fillStyle="#8b949e"; ctx.font="11px ui-monospace";
+  for (let i=0;i<=4;i++){ const p=lo+(hi-lo)*i/4; const yy=y(p); ctx.beginPath(); ctx.moveTo(pad.l,yy); ctx.lineTo(W-pad.r,yy); ctx.stroke(); ctx.fillText(p.toFixed(4),4,yy+4); }
+  c.forEach((k,i)=>{
+    const x0=x(i), vh=(k.volumeUSDC/maxV)*(H*0.18);
+    ctx.fillStyle="rgba(88,166,255,.22)"; ctx.fillRect(x0-bw/2,H-pad.b-vh,bw,vh);
+    ctx.strokeStyle=k.close>=k.open?"#3fb950":"#f85149"; ctx.fillStyle=ctx.strokeStyle;
+    const yo=y(k.open), yc=y(k.close), top=Math.min(yo,yc), hgt=Math.max(1,Math.abs(yc-yo));
+    ctx.fillRect(x0-bw/2,top,bw,hgt);
+    ctx.beginPath(); ctx.moveTo(x0,y(k.high)); ctx.lineTo(x0,y(k.low)); ctx.stroke();
+  });
+  ctx.fillStyle="#8b949e"; ctx.fillText("simulation",W-92,H-8);
+}
+function renderRows(c) {
+  const rows = c.slice(-12).reverse().map(k=>`<tr><td>${new Date(k.time).toLocaleString()}</td><td>${fmt(k.open)}</td><td>${fmt(k.high)}</td><td>${fmt(k.low)}</td><td>${fmt(k.close)}</td><td>${fmt(k.volumeUSDC,2)}</td><td>${k.activeAgents}</td></tr>`).join("");
+  document.getElementById("rows").innerHTML = rows || '<tr><td colspan="7" class="muted">No candles. Run the simulator.</td></tr>';
+}
+load();
+setInterval(load, 15000);
+</script>
