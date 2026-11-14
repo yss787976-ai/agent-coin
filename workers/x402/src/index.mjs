@@ -205,49 +205,60 @@ function paymentRequired(env, request, price, priceUsdc, resource) {
     mimeType: "application/json",
     maxTimeoutSeconds: 300,
   };
-  return json(
-    {
-      x402Version: 2,
-      error: "payment required",
-      resource,
-      accepts: [
-        {
-          ...common,
-          scheme: "exact",
-          network: `eip155:${cfg.chainId}`,
-          asset: cfg.usdc,
-          payTo: cfg.usdcPayee,
-          maxAmountRequired: priceUsdc.toString(),
-          amount: priceUsdc.toString(),
-          unit: "USDC",
-          extra: { name: "USD Coin", version: "2" },
-          instructions: `Transfer at least ${fmt(priceUsdc, 6)} USDC to ${cfg.usdcPayee} on Base, then retry with X-PAYMENT (base64 JSON containing payload.txHash).`,
+  const body = {
+    x402Version: 2,
+    error: "payment required",
+    resource,
+    accepts: [
+      {
+        ...common,
+        scheme: "exact",
+        network: `eip155:${cfg.chainId}`,
+        asset: cfg.usdc,
+        payTo: cfg.usdcPayee,
+        maxAmountRequired: priceUsdc.toString(),
+        amount: priceUsdc.toString(),
+        unit: "USDC",
+        extra: { name: "USD Coin", version: "2" },
+        outputSchema: { input: { type: "http", method: "GET", discoverable: true } },
+        extensions: {
+          bazaar: {
+            info: {
+              name: "AQB x402 resource",
+              description: common.description,
+              method: "GET",
+              inputSchema: { type: "object", properties: {} },
+            },
+          },
         },
-      ],
-      aqb: {
-        scheme: "aqb",
-        network: "base",
-        chainId: cfg.chainId,
-        asset: cfg.token,
-        payTo: cfg.payee,
-        maxAmountRequired: price.toString(),
-        amount: price.toString(),
-        unit: "AQB",
-        instructions: `Transfer at least ${fmt(price, 18)} AQB to ${cfg.payee} on Base, then retry with X-AQB-Tx: <txHash>.`,
+        instructions: `Transfer at least ${fmt(priceUsdc, 6)} USDC to ${cfg.usdcPayee} on Base, then retry with X-PAYMENT (base64 JSON containing payload.txHash).`,
       },
-      discovery: `${origin}/.well-known/agent-coin.json`,
+    ],
+    aqb: {
+      scheme: "aqb",
+      network: "base",
+      chainId: cfg.chainId,
+      asset: cfg.token,
+      payTo: cfg.payee,
+      maxAmountRequired: price.toString(),
+      amount: price.toString(),
+      unit: "AQB",
+      instructions: `Transfer at least ${fmt(price, 18)} AQB to ${cfg.payee} on Base, then retry with X-AQB-Tx: <txHash>.`,
     },
-    402,
-    {
-      "x-aqb-token": cfg.token,
-      "x-aqb-chain": String(cfg.chainId),
-      "x-aqb-price": price.toString(),
-      "x-aqb-payto": cfg.payee,
-      "x-aqb-accept": "aqb,usdc",
-      "x-aqb-usdc-price": priceUsdc.toString(),
-      "x-aqb-resource": resource,
-    }
-  );
+    discovery: `${origin}/.well-known/agent-coin.json`,
+  };
+  return json(body, 402, {
+    "x-aqb-token": cfg.token,
+    "x-aqb-chain": String(cfg.chainId),
+    "x-aqb-price": price.toString(),
+    "x-aqb-payto": cfg.payee,
+    "x-aqb-accept": "aqb,usdc",
+    "x-aqb-usdc-price": priceUsdc.toString(),
+    "x-aqb-resource": resource,
+    "payment-required": btoa(JSON.stringify(body)),
+    "www-authenticate": "x402",
+    "x-accepts-payment": "x402",
+  });
 }
 
 async function markUsed(env, tx) {

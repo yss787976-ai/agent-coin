@@ -69,6 +69,7 @@ All deployed contracts are source-verified on BaseScan (MIT): token, registry, v
 - Launch playbook: [docs/LAUNCH.md](docs/LAUNCH.md)
 - Agent card: [docs/CARD.md](docs/CARD.md)
 - PQ note: [docs/pq-note.md](docs/pq-note.md)
+- x402 integrations and listing status: [docs/x402.md](docs/x402.md), [docs/x402-listings.md](docs/x402-listings.md)
 
 ## Live on Base mainnet (chainId 8453)
 
