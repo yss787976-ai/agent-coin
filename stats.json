@@ -1,8 +1,8 @@
 {
   "aqb": 1,
   "chainId": 8453,
-  "asOf": "2026-11-13T23:57:48.262Z",
-  "block": 57119462,
+  "asOf": "2026-11-14T00:14:43.458Z",
+  "block": 57124538,
   "token": "0x2C54F202B565086B6d8D2226Edb67AC3E14C39d1",
   "registry": "0xAa964f6ea767f0D709b268abBFdd8B6C2Beef3eB",
   "pool": "0xF61Cb078f87425933741Dd7d02F5779c030dB1A6",
@@ -10,11 +10,11 @@
   "founder": "0x9eA52810f31768b1886cba9eAf917F4152f53042",
   "decimals": 18,
   "totalSupplyAQB": "73999999740.59",
-  "founderAQB": "73999999493.434353112704348586",
+  "founderAQB": "73999999493.444353112704348586",
   "saleAQB": "0",
-  "circulatingAQB": "247.155646887295651414",
+  "circulatingAQB": "247.145646887295651414",
   "vaultUSDC": "284.99",
-  "collateralRatio": "1.153079",
+  "collateralRatio": "1.153126",
   "agents": "22",
   "poolReserves": {
     "aqb": "241.52363550733669044",
@@ -32,6 +32,6 @@
     "free": "https://agentqubit.pages.dev/stats",
     "price": "0.01",
     "unit": "AQB",
-    "verifiedPayments": 2
+    "verifiedPayments": 3
   }
 }

@@ -20,6 +20,15 @@
       "resource": "/a2a/card",
       "via": "MCP aqb_x402_call",
       "verified": true
+    },
+    {
+      "tx": "0x9ec9ed6ce6a33ee220fe77dd7ad7f6980a3ce63a41edb23aa196b8bd18a30f2a",
+      "amountAQB": "0.01",
+      "from": "0x05469f7a93edE65A5ca3a15d934F152B589260de",
+      "to": "0x9eA52810f31768b1886cba9eAf917F4152f53042",
+      "resource": "/a2a/card",
+      "via": "branded Pages endpoint",
+      "verified": true
     }
   ]
 }
