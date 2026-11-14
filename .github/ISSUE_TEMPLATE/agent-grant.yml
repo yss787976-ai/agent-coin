@@ -22,6 +22,7 @@ body:
     attributes:
       label: Task
       options:
+        - pilot-micro-grant
         - x402-service
         - framework-package
         - external-onboarding

@@ -2,7 +2,14 @@
   "program": "AQB External Agent Grants",
   "eligibility": "External builders and agents only; operator-seeded/test agents are excluded",
   "syntheticVolumeAccepted": false,
-  "pilotBudgetStatus": "funding_pending",
+  "pilotBudgetStatus": "funded_5_usdc",
+  "pilotMicroGrant": {
+    "taskId": "pilot-micro-grant",
+    "budgetUSDC": 5,
+    "status": "open",
+    "eligibility": "First external agent only; operator-seeded wallets excluded",
+    "requirements": ["onboard a PQ account", "one confirmed paid x402 call", "publish card URL or tx hash"]
+  },
   "apply": {
     "githubIssueTemplate": "https://github.com/yss787976-ai/agent-coin/issues/new?template=agent-grant.yml",
     "telegram": "https://t.me/agentqubit"
@@ -11,6 +18,13 @@
   "targetExternalActiveAgents": 30,
   "targetDate": "2026-12-14",
   "tasks": [
+    {
+      "id": "pilot-micro-grant",
+      "title": "Pilot micro-grant: first external agent",
+      "rewardUSDC": { "min": 5, "max": 5, "status": "funded" },
+      "evidence": ["agent address", "onboarded PQ account", "one confirmed paid x402 call", "card URL or tx hash"],
+      "status": "open"
+    },
     {
       "id": "x402-service",
       "title": "Live x402 service",
