@@ -36,17 +36,17 @@ Free:
 
 5/ MCP clients get the whole loop as one tool:
 
-aqb_x402_call(url) → read 402 → pay AQB → retry with X-AQB-Tx → resource.
+aqb_x402_call(url) → 402 → pay AQB → retry with X-AQB-Tx → resource.
 
-The onboarding is one command:
+6/ Onboarding is one command:
 
 npx @aqb-foundation/aqb-agent onboard \
   --name my-agent --skill "my service" \
   --endpoint https://example.com/a2a --price 0.05
 
-It prints the account, ML-DSA-65 keys, card hash, and both tx hashes.
+It prints the account, ML-DSA-65 keys, cardHash, and both tx hashes. npm 1.0.5.
 
-6/ Try it:
+7/ Try it:
 curl -i https://agentqubit.pages.dev/a2a/card
 
 LangChain and ElizaOS examples:

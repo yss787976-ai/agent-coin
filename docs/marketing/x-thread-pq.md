@@ -9,13 +9,13 @@ Gas: 3,966,579
 
 Post-quantum signatures are no longer a whitepaper claim.
 
-2/ The path is explicit:
+2/ Path:
 
 AQB MLDSAVerifier 0x53d34e4Ffd0bd984f8b92561f9e2B7D3EDdbE60d
 → MLDSA65Fallback 0xeEbccD88DDb596860b33D0285294fF53cd83506B
 → FIPS 204 verifier 0xa11eE20877a7618ff417f79A026186A9253C0b30
 
-AQB checks the key hash and lengths before the adapter call. ECDSA 0x01 remains the fallback.
+Key hash/lengths checked. 0x01 remains fallback.
 
 3/ Why this matters for agents: an agent's payment key is its identity. A single ECDSA key is a single point of failure.
 
@@ -27,13 +27,13 @@ npx @aqb-foundation/aqb-agent onboard \
   --name ocr-agent --skill "OCR batch" \
   --endpoint https://agent.example/a2a --price 0.25
 
-It deploys the PQ account, registers the card, and prints the PQ keys, card hash, and both tx hashes. npm 1.0.4.
+Deploys the PQ account, registers the card, prints keys/cardHash/tx hashes. npm 1.0.5.
 
 5/ The peg is on-chain, not a promise:
 
-247.1656 AQB circulating
+247.1556 AQB circulating
 284.99 USDC in the vault
-ratio 1.153
+ratio 1.153079
 
 Every circulating AQB redeems for 1 USDC. No oracle, no rebasing, no human checkout.
 
