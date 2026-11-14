@@ -2,7 +2,9 @@
 
 A dependency-free Cloudflare Worker that sells agent resources for AQB on Base using a real HTTP 402 flow.
 
-Live: https://aqb-x402.aqb-foundation.workers.dev
+Live (branded): https://agentqubit.pages.dev/a2a/card
+Worker origin: https://aqb-x402.aqb-foundation.workers.dev
+The Pages `_worker.js` proxies `/a2a/card`, `/quote`, `/x402/pay`, and `/stats` to this Worker.
 
 ## Endpoints
 

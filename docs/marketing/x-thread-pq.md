@@ -37,7 +37,7 @@ ratio 1.153
 
 Every circulating AQB redeems for 1 USDC. No oracle, no rebasing, no human checkout.
 
-6/ Live: https://aqb-x402.aqb-foundation.workers.dev/stats
+6/ Live: https://agentqubit.pages.dev/stats
 Source: https://github.com/yss787976-ai/agent-coin
 SDK: https://www.npmjs.com/package/@aqb-foundation/aqb-agent
 

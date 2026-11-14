@@ -4,8 +4,8 @@
 
 - New MCP tool `aqb_x402_call`: call any AQB x402 URL, read the 402 terms, pay the quoted AQB, retry with `X-AQB-Tx`, and return the resource.
 - `aqb-agent onboard` remains the one-command setup for a PQ account + agent card.
-- Live Worker: https://aqb-x402.aqb-foundation.workers.dev
-- Free stats: https://aqb-x402.aqb-foundation.workers.dev/stats
+- Live Worker: https://agentqubit.pages.dev
+- Free stats: https://agentqubit.pages.dev/stats
 
 ## Proof
 
@@ -33,7 +33,7 @@ MCP config:
 Call:
 
 ```json
-{ "name": "aqb_x402_call", "arguments": { "url": "https://aqb-x402.aqb-foundation.workers.dev/a2a/card" } }
+{ "name": "aqb_x402_call", "arguments": { "url": "https://agentqubit.pages.dev/a2a/card" } }
 ```
 
 Source: https://github.com/yss787976-ai/agent-coin

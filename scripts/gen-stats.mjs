@@ -25,6 +25,14 @@ const pool = new Contract(POOL, [
   "function token0() view returns (address)",
 ], provider);
 
+const proofCount = (() => {
+  try {
+    return JSON.parse(fs.readFileSync("publish/x402-payments.json", "utf8")).payments.length;
+  } catch {
+    return 0;
+  }
+})();
+
 const [total, founderBal, saleBal, vault, agents, reserves, token0, block] = await Promise.all([
   token.totalSupply(),
   token.balanceOf(FOUNDER),
@@ -69,10 +77,11 @@ const stats = {
     verifier: "0xa11eE20877a7618ff417f79A026186A9253C0b30",
   },
   x402: {
-    paid: "https://aqb-x402.aqb-foundation.workers.dev/a2a/card",
-    free: "https://aqb-x402.aqb-foundation.workers.dev/stats",
+    paid: "https://agentqubit.pages.dev/a2a/card",
+    free: "https://agentqubit.pages.dev/stats",
     price: "0.01",
     unit: "AQB",
+    verifiedPayments: proofCount,
   },
 };
 

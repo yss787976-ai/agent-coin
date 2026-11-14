@@ -31,17 +31,17 @@ npx @aqb-foundation/aqb-agent onboard --name ocr --skill "OCR batch" --endpoint 
 
 ### Paid x402 endpoint (live)
 
-`GET https://aqb-x402.aqb-foundation.workers.dev/a2a/card` returns `402` with AQB payment terms; pay `0.01 AQB` on Base to the advertised `payTo`, then retry with `X-AQB-Tx: <txHash>`. The Worker verifies the ERC-20 `Transfer` receipt on Base and returns the resource. Free: `/stats`. Also paid: `/quote` (0.001 AQB) and `/x402/pay` (0.001 AQB).
+`GET https://agentqubit.pages.dev/a2a/card` returns `402` with AQB payment terms; pay `0.01 AQB` on Base to the advertised `payTo`, then retry with `X-AQB-Tx: <txHash>`. The Worker verifies the ERC-20 `Transfer` receipt on Base and returns the resource. Free: `/stats`. Also paid: `/quote` (0.001 AQB) and `/x402/pay` (0.001 AQB).
 
 ```bash
-curl -i https://aqb-x402.aqb-foundation.workers.dev/a2a/card
+curl -i https://agentqubit.pages.dev/a2a/card
 # 402, read x-aqb-payto / x-aqb-price
-curl -s -H "X-AQB-Tx: 0xYOUR_TX" https://aqb-x402.aqb-foundation.workers.dev/a2a/card
+curl -s -H "X-AQB-Tx: 0xYOUR_TX" https://agentqubit.pages.dev/a2a/card
 ```
 
 MCP clients can use `aqb_x402_call` with a `url`; it reads the 402 terms, pays AQB, retries with `X-AQB-Tx`, and returns the resource.
 
-Source: `workers/x402/`. Live stats: https://aqb-x402.aqb-foundation.workers.dev/stats · static snapshot: https://agentqubit.pages.dev/stats.json (regenerate with `node scripts/gen-stats.mjs --write`).
+Source: `workers/x402/`. Live stats: https://agentqubit.pages.dev/stats · static snapshot: https://agentqubit.pages.dev/stats.json (regenerate with `node scripts/gen-stats.mjs --write`).
 
 ## Verification
 

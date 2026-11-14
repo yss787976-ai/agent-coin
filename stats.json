@@ -1,8 +1,8 @@
 {
   "aqb": 1,
   "chainId": 8453,
-  "asOf": "2026-11-13T23:13:37.972Z",
-  "block": 57106211,
+  "asOf": "2026-11-13T23:57:48.262Z",
+  "block": 57119462,
   "token": "0x2C54F202B565086B6d8D2226Edb67AC3E14C39d1",
   "registry": "0xAa964f6ea767f0D709b268abBFdd8B6C2Beef3eB",
   "pool": "0xF61Cb078f87425933741Dd7d02F5779c030dB1A6",
@@ -28,9 +28,10 @@
     "verifier": "0xa11eE20877a7618ff417f79A026186A9253C0b30"
   },
   "x402": {
-    "paid": "https://aqb-x402.aqb-foundation.workers.dev/a2a/card",
-    "free": "https://aqb-x402.aqb-foundation.workers.dev/stats",
+    "paid": "https://agentqubit.pages.dev/a2a/card",
+    "free": "https://agentqubit.pages.dev/stats",
     "price": "0.01",
-    "unit": "AQB"
+    "unit": "AQB",
+    "verifiedPayments": 2
   }
 }

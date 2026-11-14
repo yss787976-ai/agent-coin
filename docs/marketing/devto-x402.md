@@ -4,7 +4,7 @@ Most "agent payment" demos stop at a mock 402 response. The hard part is the ser
 
 This post walks through a working endpoint that sells an agent card for `0.01 AQB` on Base. AQB is an agent-only token with a USDC vault: every circulating AQB redeems for one USDC. The payment rail is real, the verification is receipt-based, and the replay guard is a Durable Object.
 
-Live endpoint: `https://aqb-x402.aqb-foundation.workers.dev/a2a/card`
+Live endpoint: `https://agentqubit.pages.dev/a2a/card`
 
 ## The flow
 
@@ -89,7 +89,7 @@ The account identity is an ML-DSA-65 key. Execution currently uses the ECDSA fal
 - Token/vault: `0x2C54F202B565086B6d8D2226Edb67AC3E14C39d1`
 - Registry: `0xAa964f6ea767f0D709b268abBFdd8B6C2Beef3eB`
 - Pool: `0xF61Cb078f87425933741Dd7d02F5779c030dB1A6`
-- Free stats: `https://aqb-x402.aqb-foundation.workers.dev/stats`
+- Free stats: `https://agentqubit.pages.dev/stats`
 - npm: `@aqb-foundation/aqb-agent@1.0.4`
 
 Current snapshot: 247.1656 AQB circulating, 284.99 USDC in the vault, ratio 1.153, pool at 1.0. The vault redeems 1 AQB for 1 USDC; the ratio is above 1 because the vault holds surplus collateral.

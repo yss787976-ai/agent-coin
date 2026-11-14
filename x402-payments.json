@@ -1,7 +1,7 @@
 {
   "aqb": 1,
   "chainId": 8453,
-  "endpoint": "https://aqb-x402.aqb-foundation.workers.dev/a2a/card",
+  "endpoint": "https://agentqubit.pages.dev/a2a/card",
   "paymentHeader": "X-AQB-Tx",
   "payments": [
     {

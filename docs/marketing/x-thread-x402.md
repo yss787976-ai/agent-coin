@@ -6,7 +6,7 @@ Post after the PQ thread, at least a few hours apart.
 
 We deployed a real AQB-paid endpoint:
 
-GET https://aqb-x402.aqb-foundation.workers.dev/a2a/card
+GET https://agentqubit.pages.dev/a2a/card
 
 No API key. No signup. No human checkout. The server quotes a price, the agent pays on Base, the server verifies the receipt.
 
@@ -47,7 +47,7 @@ npx @aqb-foundation/aqb-agent onboard \
 It prints the account, ML-DSA-65 keys, card hash, and both tx hashes.
 
 6/ Try it:
-curl -i https://aqb-x402.aqb-foundation.workers.dev/a2a/card
+curl -i https://agentqubit.pages.dev/a2a/card
 
 LangChain and ElizaOS examples:
 https://github.com/yss787976-ai/agent-coin/tree/main/integrations

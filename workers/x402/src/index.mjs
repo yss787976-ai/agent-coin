@@ -28,19 +28,39 @@ const CFG = (env) => ({
   payee: (env.AQB_PAYEE || "0x9eA52810f31768b1886cba9eAf917F4152f53042").toLowerCase(),
   pool: (env.AQB_POOL || "0xF61Cb078f87425933741Dd7d02F5779c030dB1A6").toLowerCase(),
   rpc: env.BASE_RPC || "https://mainnet.base.org",
+  rpcFallback: env.BASE_RPC_FALLBACK || "https://base.llamarpc.com",
+  publicOrigin: env.AQB_PUBLIC_ORIGIN || "",
   founder: (env.AQB_FOUNDER || env.AQB_PAYEE || "0x9eA52810f31768b1886cba9eAf917F4152f53042").toLowerCase(),
 });
 
 async function rpc(env, method, params) {
-  const res = await fetch(CFG(env).rpc, {
-    method: "POST",
-    headers: { "content-type": "application/json" },
-    body: JSON.stringify({ jsonrpc: "2.0", id: 1, method, params }),
-  });
-  if (!res.ok) throw new Error(`RPC HTTP ${res.status}`);
-  const j = await res.json();
-  if (j.error) throw new Error(j.error.message || "RPC error");
-  return j.result;
+  const cfg = CFG(env);
+  const urls = [
+    cfg.rpc,
+    env.BASE_RPC_FALLBACK || "https://base.llamarpc.com",
+    "https://base-rpc.publicnode.com",
+    "https://1rpc.io/base",
+    "https://base.blockpi.network/v1/rpc/public",
+    "https://base.drpc.org",
+  ].filter((v, i, a) => v && a.indexOf(v) === i);
+  let last;
+  for (const url of urls) {
+    try {
+      const res = await fetch(url, {
+        method: "POST",
+        headers: { "content-type": "application/json" },
+        body: JSON.stringify({ jsonrpc: "2.0", id: 1, method, params }),
+      });
+      if (res.status === 429) { last = new Error("RPC HTTP 429"); continue; }
+      if (!res.ok) throw new Error(`RPC HTTP ${res.status}`);
+      const j = await res.json();
+      if (j.error) throw new Error(j.error.message || "RPC error");
+      return j.result;
+    } catch (e) {
+      last = e;
+    }
+  }
+  throw last || new Error("RPC unavailable");
 }
 
 const hexWord = (data, i) => data.slice(2 + i * 64, 2 + (i + 1) * 64);
@@ -147,7 +167,7 @@ const CORS = {
   "access-control-allow-origin": "*",
   "access-control-allow-headers": "content-type,x-aqb-tx",
   "access-control-allow-methods": "GET,POST,OPTIONS",
-  "access-control-expose-headers": "x-aqb-token,x-aqb-chain,x-aqb-price,x-aqb-payto,x-aqb-accept,x-aqb-paid",
+  "access-control-expose-headers": "x-aqb-token,x-aqb-chain,x-aqb-price,x-aqb-payto,x-aqb-accept,x-aqb-paid,x-aqb-stats",
 };
 
 function json(body, status = 200, extra = {}) {
@@ -159,7 +179,7 @@ function json(body, status = 200, extra = {}) {
 
 function paymentRequired(env, request, price, resource) {
   const cfg = CFG(env);
-  const origin = new URL(request.url).origin;
+  const origin = cfg.publicOrigin || new URL(request.url).origin;
   return json(
     {
       error: "payment required",
@@ -243,7 +263,7 @@ async function telegramUpdate(env, update) {
   if (!msg || !msg.chat?.id) return { ignored: true };
   const text = (msg.text || "").trim();
   const chatId = msg.chat.id;
-  const origin = "https://aqb-x402.aqb-foundation.workers.dev";
+  const origin = CFG(env).publicOrigin || "https://agentqubit.pages.dev";
   let reply;
 
   if (text.startsWith("/start")) {
@@ -312,7 +332,7 @@ async function telegramUpdate(env, update) {
 
 function card(env, request) {
   const cfg = CFG(env);
-  const origin = new URL(request.url).origin;
+  const origin = cfg.publicOrigin || new URL(request.url).origin;
   return {
     aqb: 1,
     name: "aqb-x402",
@@ -361,7 +381,25 @@ export default {
         });
       }
 
-      if (url.pathname === "/stats") return json(await stats(env));
+      if (url.pathname === "/stats") {
+        try {
+          return json(await stats(env));
+        } catch (e) {
+          const snap = await fetch("https://agentqubit.pages.dev/stats.json");
+          if (snap.ok) {
+            return new Response(await snap.text(), {
+              status: 200,
+              headers: {
+                "content-type": "application/json; charset=utf-8",
+                "cache-control": "no-store",
+                "x-aqb-stats": "snapshot",
+                ...CORS,
+              },
+            });
+          }
+          throw e;
+        }
+      }
 
       const paidCheck = async (price, resource) => {
         const p = await paid(request, env, price, resource);

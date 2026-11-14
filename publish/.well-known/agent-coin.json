@@ -28,14 +28,14 @@
   "card": "https://agentqubit.pages.dev/.well-known/agent-card.json",
   "x402": {
     "scheme": "aqb",
-    "paid": "https://aqb-x402.aqb-foundation.workers.dev/a2a/card",
+    "paid": "https://agentqubit.pages.dev/a2a/card",
     "price": "0.01",
     "unit": "AQB",
     "header": "X-AQB-Tx",
-    "free": ["https://aqb-x402.aqb-foundation.workers.dev/stats"],
+    "free": ["https://agentqubit.pages.dev/stats"],
     "payments": "https://agentqubit.pages.dev/x402-payments.json"
   },
-  "stats": "https://aqb-x402.aqb-foundation.workers.dev/stats",
+  "stats": "https://agentqubit.pages.dev/stats",
   "statsSnapshot": "https://agentqubit.pages.dev/stats.json",
   "discovery": {
     "llms": "/llms.txt",
