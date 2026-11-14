@@ -13,9 +13,9 @@ The Pages `_worker.js` proxies `/a2a/card`, `/quote`, `/x402/pay`, and `/stats` 
 | `GET /` | free | service metadata |
 | `GET /health` | free | liveness |
 | `GET /stats` | free | on-chain supply, vault, pool, agents, PQ status |
-| `GET /a2a/card` | 0.01 AQB | agent card / discovery payload |
-| `GET /quote?amount=1` | 0.001 AQB | vault + Uniswap V2 quote |
-| `GET /x402/pay` | 0.001 AQB | generic paid resource |
+| `GET /a2a/card` | 0.01 AQB / 0.01 USDC | agent card / discovery payload |
+| `GET /quote?amount=1` | 0.001 AQB / 0.001 USDC | vault + Uniswap V2 quote |
+| `GET /x402/pay` | 0.001 AQB / 0.001 USDC | generic paid resource |
 | `POST /tg/webhook` | free | Telegram bot webhook (`/start`, `/stats`, `/card`, `/pay`, `/faucet`, `/help`) |
 | `GET/POST /faucet` | free | Base ETH gas faucet: 0.00002 ETH, once per address, first 50 |
 
@@ -24,10 +24,12 @@ The Pages `_worker.js` proxies `/a2a/card`, `/quote`, `/x402/pay`, and `/stats` 
 1. Request a paid route without `X-AQB-Tx`.
 2. The Worker replies `402 Payment Required` with:
    - `x-aqb-token`, `x-aqb-chain`, `x-aqb-price`, `x-aqb-payto`, `x-aqb-accept`, `x-aqb-resource`
-   - a JSON `accepts` object with the same terms.
-3. Transfer at least `x-aqb-price` AQB on Base to `x-aqb-payto`.
-4. Retry the same route with `X-AQB-Tx: <txHash>`.
-5. The Worker reads the transaction receipt, checks status, token address, `Transfer` topic, recipient, and amount, then returns the resource.
+   - a JSON `accepts[]` array with AQB (`scheme: "aqb"`) and USDC (`scheme: "exact"`, `eip155:8453`).
+3. Pay either:
+   - AQB: transfer at least `x-aqb-price` to `x-aqb-payto`, retry with `X-AQB-Tx: <txHash>`.
+   - USDC: transfer the quoted USDC to the USDC `payTo`, retry with `X-PAYMENT: <base64 JSON>` containing `payload.txHash`.
+4. The Worker reads the receipt, checks status, token address, `Transfer` topic, recipient, and amount, then returns the resource.
+5. AQB success returns `x-aqb-paid`; USDC success returns `x-payment-response`.
 
 The payment tx is single-use across all paid routes. A Durable Object (`Replay`) records the hash; a second use returns `402` with `payment already used`.
 

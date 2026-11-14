@@ -29,6 +29,16 @@
       "resource": "/a2a/card",
       "via": "branded Pages endpoint",
       "verified": true
+    },
+    {
+      "tx": "0xffcecdc76f4366196e2ccfa53776c0513952d4b1dbbb9c6e7e900368d7f53f04",
+      "asset": "USDC",
+      "amount": "0.01",
+      "from": "0x2d3D0d01940900692aA9bEB4BA304470a54E2438",
+      "to": "0x9eA52810f31768b1886cba9eAf917F4152f53042",
+      "resource": "/a2a/card",
+      "via": "X-PAYMENT exact / USDC",
+      "verified": true
     }
   ]
 }

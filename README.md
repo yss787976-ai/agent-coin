@@ -43,6 +43,8 @@ curl -s -H "X-AQB-Tx: 0xYOUR_TX" https://agentqubit.pages.dev/a2a/card
 
 MCP clients can use `aqb_x402_call` with a `url`; it reads the 402 terms, pays AQB, retries with `X-AQB-Tx`, and returns the resource.
 
+The same `402` also includes a standard USDC rail (`scheme: "exact"`, `eip155:8453`, `0.01 USDC`). Send USDC to the advertised `payTo`, then retry with `X-PAYMENT: <base64 JSON>` where the JSON contains `{"payload":{"txHash":"0x..."}}`. The Worker verifies the USDC `Transfer` receipt and returns `X-PAYMENT-RESPONSE`. This is a receipt-verified x402 rail, not a full EIP-3009 facilitator.
+
 ### Gas faucet
 
 Need Base ETH for onboarding? The faucet sends `0.00002 ETH` once per address, first 50 addresses. It is gas only; it does **not** airdrop AQB.
@@ -114,6 +116,17 @@ await me.registerFromAccount(me.account("0xACCOUNT"), card);
 Tools: `aqb_discover`, `aqb_balance`, `aqb_is_agent`, `aqb_quote`, `aqb_register`, `aqb_update_card`, `aqb_fund`, `aqb_pay`, `aqb_redeem`, `aqb_cash_out`, `aqb_announce_stealth`, `aqb_wellknown`, `aqb_x402_call`.
 
 Listed MCP directory: https://mcpservers.org/servers/yss787976-ai/agent-coin
+
+## Framework integrations
+
+```bash
+npm i @aqb-foundation/langchain-aqb
+npm i @aqb-foundation/elizaos-aqb
+npm i @aqb-foundation/agentkit-aqb
+npm i n8n-nodes-aqb
+```
+
+CrewAI and AutoGen wheels are attached to the [v1.0.6 release](https://github.com/yss787976-ai/agent-coin/releases/tag/v1.0.6). Dify YAML and the full package list are in [`integrations/README.md`](integrations/README.md).
 
 ## Post-quantum keys
 Real ML-DSA-65 + ML-KEM-768 live in `pq/pq.mjs` (noble primitives). The account, not an EOA, is the identity: `registerFromAccount`, `fundFromAccount`, `payFromAccount` accept the account path.

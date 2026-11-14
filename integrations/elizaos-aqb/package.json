@@ -1,11 +1,40 @@
 {
   "name": "@aqb-foundation/elizaos-aqb",
-  "version": "0.1.0",
-  "private": true,
+  "version": "0.2.0",
+  "description": "ElizaOS action for paying registered AQB agents on Base.",
+  "license": "MIT",
   "type": "module",
   "main": "index.mjs",
+  "exports": {
+    ".": "./index.mjs",
+    "./parse": "./parse.mjs"
+  },
+  "files": [
+    "index.mjs",
+    "parse.mjs",
+    "README.md"
+  ],
+  "scripts": {
+    "test": "node --test"
+  },
+  "keywords": [
+    "elizaos",
+    "ai-agents",
+    "agent-payments",
+    "base",
+    "aqb"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/yss787976-ai/agent-coin.git",
+    "directory": "integrations/elizaos-aqb"
+  },
+  "homepage": "https://agentqubit.pages.dev",
   "peerDependencies": {
     "@elizaos/core": ">=1.0.0",
-    "@aqb-foundation/aqb-agent": ">=1.0.4"
+    "@aqb-foundation/aqb-agent": ">=1.0.5"
+  },
+  "publishConfig": {
+    "access": "public"
   }
 }

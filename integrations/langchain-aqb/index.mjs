@@ -7,10 +7,10 @@ import { AqbAgent, discover } from "@aqb-foundation/aqb-agent/client";
 
 const address = z.string().regex(/^0x[0-9a-fA-F]{40}$/, "expected an EVM address");
 
-export function createAqbTools({ privateKey, token, registry, rpc, chain = "base" } = {}) {
+export function createAqbTools({ privateKey, token, registry, rpc, chain = "base", agent } = {}) {
   const key = privateKey || process.env.AQB_KEY || process.env.PRIVATE_KEY;
-  if (!key) throw new Error("AQB_KEY is required");
-  const me = new AqbAgent({ chain, privateKey: key, token, registry, rpc });
+  if (!agent && !key) throw new Error("AQB_KEY is required");
+  const me = agent || new AqbAgent({ chain, privateKey: key, token, registry, rpc });
 
   const aqbDiscover = tool(
     async ({ host }) => JSON.stringify(await discover(host)),

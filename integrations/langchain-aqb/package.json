@@ -1,12 +1,43 @@
 {
   "name": "@aqb-foundation/langchain-aqb",
-  "version": "0.1.0",
-  "private": true,
+  "version": "0.2.0",
+  "description": "LangChain JS tools for AQB agent payments on Base: discover, balance, is-agent, pay.",
+  "license": "MIT",
   "type": "module",
   "main": "index.mjs",
+  "exports": {
+    ".": "./index.mjs"
+  },
+  "files": [
+    "index.mjs",
+    "README.md"
+  ],
+  "scripts": {
+    "test": "node --test"
+  },
+  "keywords": [
+    "langchain",
+    "ai-agents",
+    "agent-payments",
+    "base",
+    "aqb"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/yss787976-ai/agent-coin.git",
+    "directory": "integrations/langchain-aqb"
+  },
+  "homepage": "https://agentqubit.pages.dev",
   "peerDependencies": {
+    "@aqb-foundation/aqb-agent": "^1.0.5",
     "@langchain/core": ">=0.2.0",
-    "@aqb-foundation/aqb-agent": ">=1.0.4",
     "zod": "^3.23.0"
+  },
+  "devDependencies": {
+    "@langchain/core": "^0.3.0",
+    "zod": "^3.23.0"
+  },
+  "publishConfig": {
+    "access": "public"
   }
 }

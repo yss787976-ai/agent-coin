@@ -1,0 +1,189 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "AQB x402 Agent Resources",
+    "version": "1.0.0",
+    "description": "Paid agent resources settled in AQB or USDC on Base. AQB is an agent-only USD-pegged token; every circulating AQB redeems for 1 USDC from an on-chain vault.",
+    "x-guidance": "Use GET /a2a/card for the paid agent card (0.01 USD-equivalent), GET /quote?amount=1 for a vault/pool quote (0.001 USD), or GET /stats for free on-chain stats. The 402 response advertises an x402 exact USDC rail and an AQB-native rail. Pay on Base, then retry with X-PAYMENT (USDC) or X-AQB-Tx (AQB).",
+    "contact": {
+      "email": "yss787976@gmail.com"
+    },
+    "x-aqb": {
+      "token": "0x2C54F202B565086B6d8D2226Edb67AC3E14C39d1",
+      "registry": "0xAa964f6ea767f0D709b268abBFdd8B6C2Beef3eB",
+      "chainId": 8453,
+      "pq": "ML-DSA-65"
+    }
+  },
+  "servers": [
+    {
+      "url": "https://agentqubit.pages.dev"
+    }
+  ],
+  "paths": {
+    "/a2a/card": {
+      "get": {
+        "operationId": "getAgentCard",
+        "summary": "Paid agent card and discovery payload",
+        "description": "Returns the AQB x402 agent card. Price: 0.01 USD-equivalent; the 402 advertises USDC exact and AQB-native payment.",
+        "parameters": [
+          {
+            "name": "format",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "enum": ["json"],
+              "default": "json"
+            },
+            "description": "Response format. JSON is the only supported value."
+          }
+        ],
+        "x-payment-info": {
+          "price": {
+            "mode": "fixed",
+            "currency": "USD",
+            "amount": "0.010000"
+          },
+          "protocols": [{ "x402": {} }]
+        },
+        "responses": {
+          "200": {
+            "description": "Agent card",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "aqb": { "type": "integer" },
+                    "name": { "type": "string" },
+                    "skill": { "type": "string" },
+                    "endpoint": { "type": "string" },
+                    "pay": { "type": "string" },
+                    "accepts": {
+                      "type": "array",
+                      "items": { "type": "string" }
+                    }
+                  },
+                  "required": ["aqb", "name", "endpoint", "pay"]
+                }
+              }
+            }
+          },
+          "402": { "description": "Payment Required" }
+        }
+      }
+    },
+    "/quote": {
+      "get": {
+        "operationId": "getQuote",
+        "summary": "Vault and Uniswap V2 quote",
+        "description": "Returns the USD vault redemption value and the Uniswap V2 pool quote for an AQB amount. Price: 0.001 USD-equivalent.",
+        "parameters": [
+          {
+            "name": "amount",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "default": "1",
+              "pattern": "^[0-9]+(\\.[0-9]+)?$"
+            },
+            "description": "AQB amount to quote."
+          }
+        ],
+        "x-payment-info": {
+          "price": {
+            "mode": "fixed",
+            "currency": "USD",
+            "amount": "0.001000"
+          },
+          "protocols": [{ "x402": {} }]
+        },
+        "responses": {
+          "200": {
+            "description": "Quote",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "aqb": { "type": "string" },
+                    "vaultUSDC": { "type": "string" },
+                    "poolUSDC": { "type": "string" },
+                    "poolPriceUSDC": { "type": "string" }
+                  },
+                  "required": ["aqb", "vaultUSDC", "poolUSDC"]
+                }
+              }
+            }
+          },
+          "402": { "description": "Payment Required" }
+        }
+      }
+    },
+    "/x402/pay": {
+      "get": {
+        "operationId": "getPaidResource",
+        "summary": "Generic paid x402 resource",
+        "description": "A demo paid resource. Price: 0.001 USD-equivalent.",
+        "x-payment-info": {
+          "price": {
+            "mode": "fixed",
+            "currency": "USD",
+            "amount": "0.001000"
+          },
+          "protocols": [{ "x402": {} }]
+        },
+        "responses": {
+          "200": {
+            "description": "Paid resource",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "ok": { "type": "boolean" },
+                    "resource": { "type": "string" },
+                    "paidWith": { "type": "string" },
+                    "tx": { "type": "string" }
+                  },
+                  "required": ["ok", "resource", "tx"]
+                }
+              }
+            }
+          },
+          "402": { "description": "Payment Required" }
+        }
+      }
+    },
+    "/stats": {
+      "get": {
+        "operationId": "getStats",
+        "summary": "Free on-chain AQB stats",
+        "description": "Free supply, vault, pool, agent count, and PQ status.",
+        "security": [],
+        "responses": {
+          "200": {
+            "description": "AQB stats",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "aqb": { "type": "integer" },
+                    "circulatingAQB": { "type": "string" },
+                    "vaultUSDC": { "type": "string" },
+                    "collateralRatio": { "type": "string" },
+                    "agents": { "type": "string" }
+                  },
+                  "required": ["aqb", "circulatingAQB", "vaultUSDC", "agents"]
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

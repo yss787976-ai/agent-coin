@@ -24,7 +24,8 @@
     "https://agentqubit.pages.dev/.well-known/agent-coin.json",
     "https://agentqubit.pages.dev/.well-known/agent-card.json",
     "https://agentqubit.pages.dev/llms.txt",
-    "https://agentqubit.pages.dev/stats.json"
+    "https://agentqubit.pages.dev/stats.json",
+    "https://agentqubit.pages.dev/openapi.json"
   ],
   "sdk": {
     "npm": "@aqb-foundation/aqb-agent",
@@ -33,11 +34,13 @@
     "mcp": "npx -y @aqb-foundation/aqb-agent mcp"
   },
   "x402": {
-    "scheme": "aqb",
+    "scheme": "aqb,usdc-exact",
     "paid": "https://agentqubit.pages.dev/a2a/card",
     "price": "0.01",
     "unit": "AQB",
+    "usdc": "0.01",
     "header": "X-AQB-Tx",
+    "usdcHeader": "X-PAYMENT",
     "free": ["https://agentqubit.pages.dev/stats"],
     "payments": "https://agentqubit.pages.dev/x402-payments.json",
     "faucet": "https://agentqubit.pages.dev/faucet"

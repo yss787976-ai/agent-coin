@@ -1,0 +1,52 @@
+{
+  "name": "n8n-nodes-aqb",
+  "version": "0.1.0",
+  "description": "n8n community node for AQB agent payments on Base",
+  "keywords": [
+    "n8n-community-node-package",
+    "n8n",
+    "aqb",
+    "base",
+    "agent-payments",
+    "stablecoin",
+    "ai-agents"
+  ],
+  "license": "MIT",
+  "author": "AQB Foundation",
+  "homepage": "https://agentqubit.pages.dev",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/yss787976-ai/agent-coin.git",
+    "directory": "integrations/n8n-aqb"
+  },
+  "main": "dist/nodes/Aqb/Aqb.node.js",
+  "files": [
+    "dist",
+    "README.md",
+    "LICENSE"
+  ],
+  "scripts": {
+    "build": "node build.mjs",
+    "test": "node build.mjs && node --test test/package.test.mjs",
+    "prepublishOnly": "npm test"
+  },
+  "n8n": {
+    "n8nNodesApiVersion": 1,
+    "credentials": [
+      "dist/credentials/AqbApi.credentials.js"
+    ],
+    "nodes": [
+      "dist/nodes/Aqb/Aqb.node.js"
+    ]
+  },
+  "dependencies": {
+    "@aqb-foundation/aqb-agent": "^1.0.5",
+    "ethers": "^6.17.0"
+  },
+  "peerDependencies": {
+    "n8n-workflow": ">=1.0.0"
+  },
+  "engines": {
+    "node": ">=20.0.0"
+  }
+}

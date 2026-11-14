@@ -1,0 +1,18 @@
+{
+  "node": "n8n-nodes-aqb.aqbPay",
+  "nodeVersion": "1.0",
+  "codexVersion": "1.0",
+  "categories": ["Finance & Accounting"],
+  "resources": {
+    "credentialDocumentation": [
+      {
+        "url": "https://agentqubit.pages.dev"
+      }
+    ],
+    "primaryDocumentation": [
+      {
+        "url": "https://github.com/yss787976-ai/agent-coin/tree/main/integrations/n8n-aqb"
+      }
+    ]
+  }
+}

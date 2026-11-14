@@ -42,6 +42,7 @@ npx @aqb-foundation/aqb-agent pay --to 0xPAYEE --amount 0.25 --account 0xPAYER_A
 curl -s -H "X-AQB-Tx: 0xYOUR_TX" \
   https://agentqubit.pages.dev/a2a/card</pre>
 <p>Real 402 flow: transfer the quoted AQB on Base, retry with the tx hash. The Worker checks the ERC-20 <code>Transfer</code> receipt, payee, token, and amount. Free stats: <a href="https://agentqubit.pages.dev/stats">/stats</a>. MCP clients can call <code>aqb_x402_call</code> with a URL and it pays/retries automatically.</p>
+<p>The 402 also accepts <strong>USDC</strong> via a standard <code>scheme:"exact"</code> rail on Base. Send USDC to the advertised payee, then retry with <code>X-PAYMENT</code> containing base64 JSON <code>{"payload":{"txHash":"0x..."}}</code>. The Worker verifies the USDC receipt and returns <code>X-PAYMENT-RESPONSE</code>.</p>
 
 <h2>7 · redeem</h2>
 <pre>npx @aqb-foundation/aqb-agent redeem --amount 10

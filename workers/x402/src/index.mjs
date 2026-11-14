@@ -23,11 +23,18 @@ const PRICE_CARD = 10_000_000_000_000_000n; // 0.01 AQB
 const PRICE_QUOTE = 1_000_000_000_000_000n; // 0.001 AQB
 const PRICE_PAY = 1_000_000_000_000_000n; // 0.001 AQB
 
+const USDC_TOKEN = "0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913";
+const PRICE_CARD_USDC = 10_000n; // 0.01 USDC (6dp)
+const PRICE_QUOTE_USDC = 1_000n; // 0.001 USDC
+const PRICE_PAY_USDC = 1_000n; // 0.001 USDC
+
 const CFG = (env) => ({
   chainId: Number(env.AQB_CHAIN_ID || 8453),
   token: (env.AQB_TOKEN || "0x2C54F202B565086B6d8D2226Edb67AC3E14C39d1").toLowerCase(),
   registry: (env.AQB_REGISTRY || "0xAa964f6ea767f0D709b268abBFdd8B6C2Beef3eB").toLowerCase(),
   payee: (env.AQB_PAYEE || "0x9eA52810f31768b1886cba9eAf917F4152f53042").toLowerCase(),
+  usdc: (env.AQB_USDC || USDC_TOKEN).toLowerCase(),
+  usdcPayee: (env.AQB_USDC_PAYEE || env.AQB_PAYEE || "0x9eA52810f31768b1886cba9eAf917F4152f53042").toLowerCase(),
   pool: (env.AQB_POOL || "0xF61Cb078f87425933741Dd7d02F5779c030dB1A6").toLowerCase(),
   rpc: env.BASE_RPC || "https://mainnet.base.org",
   rpcFallback: env.BASE_RPC_FALLBACK || "https://base.llamarpc.com",
@@ -74,13 +81,12 @@ async function ethCall(env, to, data) {
   return rpc(env, "eth_call", [{ to, data }, "latest"]);
 }
 
-async function verifyPayment(env, txHash, payee, minValue) {
-  const cfg = CFG(env);
+async function verifyTransfer(env, txHash, token, payee, minValue) {
   if (!/^0x[0-9a-fA-F]{64}$/.test(txHash || "")) return false;
   const receipt = await rpc(env, "eth_getTransactionReceipt", [txHash]);
   if (!receipt || receipt.status !== "0x1") return false;
   for (const log of receipt.logs || []) {
-    if ((log.address || "").toLowerCase() !== cfg.token) continue;
+    if ((log.address || "").toLowerCase() !== token.toLowerCase()) continue;
     if (!log.topics || log.topics[0]?.toLowerCase() !== TRANSFER_TOPIC) continue;
     if (log.topics.length < 3) continue;
     const to = ("0x" + log.topics[2].slice(26)).toLowerCase();
@@ -90,6 +96,14 @@ async function verifyPayment(env, txHash, payee, minValue) {
     if (value >= minValue) return true;
   }
   return false;
+}
+
+async function verifyPayment(env, txHash, payee, minValue) {
+  return verifyTransfer(env, txHash, CFG(env).token, payee, minValue);
+}
+
+async function verifyUsdcPayment(env, txHash, payee, minValue) {
+  return verifyTransfer(env, txHash, CFG(env).usdc, payee, minValue);
 }
 
 async function poolState(env) {
@@ -140,6 +154,8 @@ async function stats(env) {
     registry: cfg.registry,
     pool: cfg.pool,
     payee: cfg.payee,
+    usdc: cfg.usdc,
+    usdcPayee: cfg.usdcPayee,
     decimals: 18,
     totalSupplyAQB: fmt(total, 18),
     founderAQB: fmt(founder, 18),
@@ -167,9 +183,9 @@ function fmt(v, decimals) {
 
 const CORS = {
   "access-control-allow-origin": "*",
-  "access-control-allow-headers": "content-type,x-aqb-tx",
+  "access-control-allow-headers": "content-type,x-aqb-tx,x-payment",
   "access-control-allow-methods": "GET,POST,OPTIONS",
-  "access-control-expose-headers": "x-aqb-token,x-aqb-chain,x-aqb-price,x-aqb-payto,x-aqb-accept,x-aqb-paid,x-aqb-stats",
+  "access-control-expose-headers": "x-aqb-token,x-aqb-chain,x-aqb-price,x-aqb-payto,x-aqb-accept,x-aqb-paid,x-aqb-stats,x-payment-response",
 };
 
 function json(body, status = 200, extra = {}) {
@@ -179,21 +195,43 @@ function json(body, status = 200, extra = {}) {
   });
 }
 
-function paymentRequired(env, request, price, resource) {
+function paymentRequired(env, request, price, priceUsdc, resource) {
   const cfg = CFG(env);
   const origin = cfg.publicOrigin || new URL(request.url).origin;
+  const absResource = origin + resource;
+  const common = {
+    resource: absResource,
+    description: "AQB paid agent resource",
+    mimeType: "application/json",
+    maxTimeoutSeconds: 300,
+  };
   return json(
     {
+      x402Version: 2,
       error: "payment required",
       resource,
-      accepts: {
+      accepts: [
+        {
+          ...common,
+          scheme: "exact",
+          network: `eip155:${cfg.chainId}`,
+          asset: cfg.usdc,
+          payTo: cfg.usdcPayee,
+          maxAmountRequired: priceUsdc.toString(),
+          amount: priceUsdc.toString(),
+          unit: "USDC",
+          extra: { name: "USD Coin", version: "2" },
+          instructions: `Transfer at least ${fmt(priceUsdc, 6)} USDC to ${cfg.usdcPayee} on Base, then retry with X-PAYMENT (base64 JSON containing payload.txHash).`,
+        },
+      ],
+      aqb: {
         scheme: "aqb",
         network: "base",
         chainId: cfg.chainId,
-        token: cfg.token,
+        asset: cfg.token,
         payTo: cfg.payee,
-        price: price.toString(),
-        priceHuman: fmt(price, 18),
+        maxAmountRequired: price.toString(),
+        amount: price.toString(),
         unit: "AQB",
         instructions: `Transfer at least ${fmt(price, 18)} AQB to ${cfg.payee} on Base, then retry with X-AQB-Tx: <txHash>.`,
       },
@@ -205,7 +243,8 @@ function paymentRequired(env, request, price, resource) {
       "x-aqb-chain": String(cfg.chainId),
       "x-aqb-price": price.toString(),
       "x-aqb-payto": cfg.payee,
-      "x-aqb-accept": "aqb",
+      "x-aqb-accept": "aqb,usdc",
+      "x-aqb-usdc-price": priceUsdc.toString(),
       "x-aqb-resource": resource,
     }
   );
@@ -223,14 +262,45 @@ async function markUsed(env, tx) {
   return res.ok;
 }
 
-async function paid(request, env, price, resource) {
+function decodeXPayment(value) {
+  try { return JSON.parse(atob(value)); } catch {}
+  try { return JSON.parse(value); } catch {}
+  return null;
+}
+
+function paidHeaders(p) {
+  if (!p) return {};
+  if (p.rail === "usdc") return { "x-payment-response": p.paymentResponse };
+  return { "x-aqb-paid": p.tx };
+}
+
+async function paid(request, env, price, priceUsdc, resource) {
   const cfg = CFG(env);
   const tx = request.headers.get("x-aqb-tx");
-  if (!tx) return null;
-  const ok = await verifyPayment(env, tx, cfg.payee, price);
-  if (!ok) return { error: "payment not verified", tx };
-  if (!(await markUsed(env, tx))) return { error: "payment already used", tx };
-  return { tx };
+  if (tx) {
+    const ok = await verifyPayment(env, tx, cfg.payee, price);
+    if (!ok) return { error: "payment not verified", tx };
+    if (!(await markUsed(env, tx))) return { error: "payment already used", tx };
+    return { tx, rail: "aqb" };
+  }
+
+  const xpayment = request.headers.get("x-payment");
+  if (xpayment) {
+    const decoded = decodeXPayment(xpayment);
+    const txHash = decoded?.payload?.txHash || decoded?.payload?.transaction || decoded?.payload?.tx || decoded?.txHash;
+    if (!txHash) return { error: "invalid X-PAYMENT payload" };
+    const ok = await verifyUsdcPayment(env, txHash, cfg.usdcPayee, priceUsdc);
+    if (!ok) return { error: "USDC payment not verified", tx: txHash };
+    if (!(await markUsed(env, txHash))) return { error: "payment already used", tx: txHash };
+    const paymentResponse = btoa(JSON.stringify({
+      success: true,
+      transaction: txHash,
+      network: `eip155:${cfg.chainId}`,
+      payer: decoded?.payload?.authorization?.from || null,
+    }));
+    return { tx: txHash, rail: "usdc", paymentResponse };
+  }
+  return null;
 }
 
 export class Replay {
@@ -424,7 +494,8 @@ function card(env, request) {
     kem: "ML-KEM-768",
     pay: `aqb:${cfg.payee}`,
     price: { unit: "AQB", amount: PRICE_CARD.toString(), per: "card" },
-    accepts: ["aqb"],
+    priceUSDC: { unit: "USDC", amount: PRICE_CARD_USDC.toString(), per: "card" },
+    accepts: ["aqb", "usdc"],
     network: "base",
     chainId: cfg.chainId,
   };
@@ -485,11 +556,11 @@ export default {
           service: "aqb-x402",
           chainId: cfg.chainId,
           paid: {
-            "/a2a/card": { price: PRICE_CARD.toString(), unit: "AQB" },
-            "/quote": { price: PRICE_QUOTE.toString(), unit: "AQB" },
-            "/x402/pay": { price: PRICE_PAY.toString(), unit: "AQB" },
+            "/a2a/card": { aqb: PRICE_CARD.toString(), usdc: PRICE_CARD_USDC.toString() },
+            "/quote": { aqb: PRICE_QUOTE.toString(), usdc: PRICE_QUOTE_USDC.toString() },
+            "/x402/pay": { aqb: PRICE_PAY.toString(), usdc: PRICE_PAY_USDC.toString() },
           },
-          free: ["/stats"],
+          free: ["/stats", "/faucet"],
         });
       }
 
@@ -513,21 +584,21 @@ export default {
         }
       }
 
-      const paidCheck = async (price, resource) => {
-        const p = await paid(request, env, price, resource);
-        if (p === null) return paymentRequired(env, request, price, resource);
-        if (p.error) return json({ error: p.error, tx: p.tx }, 402, { ...CORS, "x-aqb-paid": p.tx });
+      const paidCheck = async (price, priceUsdc, resource) => {
+        const p = await paid(request, env, price, priceUsdc, resource);
+        if (p === null) return paymentRequired(env, request, price, priceUsdc, resource);
+        if (p.error) return json({ error: p.error, tx: p.tx }, 402, { ...CORS, ...paidHeaders(p) });
         return p;
       };
 
       if (url.pathname === "/a2a/card") {
-        const p = await paidCheck(PRICE_CARD, "/a2a/card");
+        const p = await paidCheck(PRICE_CARD, PRICE_CARD_USDC, "/a2a/card");
         if (p instanceof Response) return p;
-        return json(card(env, request), 200, { ...CORS, "x-aqb-paid": p.tx });
+        return json(card(env, request), 200, { ...CORS, ...paidHeaders(p) });
       }
 
       if (url.pathname === "/quote") {
-        const p = await paidCheck(PRICE_QUOTE, "/quote");
+        const p = await paidCheck(PRICE_QUOTE, PRICE_QUOTE_USDC, "/quote");
         if (p instanceof Response) return p;
         const amount = BigInt(url.searchParams.get("amount") || "1") * 10n ** 18n;
         if (amount <= 0n) return json({ error: "bad amount" }, 400, CORS);
@@ -541,17 +612,17 @@ export default {
             reserves: { aqb: fmt(q.reserves.aqb, 18), usdc: fmt(q.reserves.usdc, 6) },
           },
           200,
-          { ...CORS, "x-aqb-paid": p.tx }
+          { ...CORS, ...paidHeaders(p) }
         );
       }
 
       if (url.pathname === "/x402/pay") {
-        const p = await paidCheck(PRICE_PAY, "/x402/pay");
+        const p = await paidCheck(PRICE_PAY, PRICE_PAY_USDC, "/x402/pay");
         if (p instanceof Response) return p;
         return json(
-          { ok: true, resource: "x402", paidWith: "AQB", tx: p.tx, note: "Replace this demo resource with your own paid agent service." },
+          { ok: true, resource: "x402", paidWith: p.rail === "usdc" ? "USDC" : "AQB", tx: p.tx, note: "Replace this demo resource with your own paid agent service." },
           200,
-          { ...CORS, "x-aqb-paid": p.tx }
+          { ...CORS, ...paidHeaders(p) }
         );
       }
 

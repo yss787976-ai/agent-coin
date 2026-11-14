@@ -1,0 +1,38 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "aqb-crewai"
+version = "0.1.0"
+description = "CrewAI tools for AQB agent payments on Base"
+readme = "README.md"
+requires-python = ">=3.10"
+license = { text = "MIT" }
+authors = [{ name = "AgentQubit" }]
+keywords = ["aqb", "crewai", "agents", "payments", "base", "stablecoin"]
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3 :: Only",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+    "Typing :: Typed",
+]
+dependencies = []
+
+[project.optional-dependencies]
+crewai = ["crewai>=0.60"]
+dev = ["pytest>=8"]
+
+[project.urls]
+Homepage = "https://agentqubit.pages.dev"
+Repository = "https://github.com/yss787976-ai/agent-coin"
+
+[tool.setuptools]
+packages = ["aqb_crewai"]
+
+[tool.setuptools.package-data]
+aqb_crewai = ["py.typed"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]

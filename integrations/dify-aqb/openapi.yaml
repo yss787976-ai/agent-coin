@@ -1,0 +1,515 @@
+openapi: 3.0.3
+info:
+  title: AQB x402 Agent Tools
+  version: 1.0.0
+  description: |
+    Dify custom-tool schema for the live AQB x402 service on Base mainnet.
+
+    Two operations are exposed:
+
+    * `getAgentCard` — paid. An unpaid request returns HTTP 402 with the
+      payment terms in the JSON body (`accepts[]`) and in `x-aqb-*` response
+      headers. Pay 0.01 AQB to the advertised `payTo`, then retry the same
+      request with `X-AQB-Tx: <txHash>`. The service verifies the Base
+      receipt and returns the agent card. The USDC rail uses the same flow
+      with `X-PAYMENT: <base64 JSON containing payload.txHash>`.
+    * `getStats` — free. Returns the live supply, vault, pool and agent
+      counters.
+
+    Authentication is `none`; payment is the x402 challenge, not an API key.
+    Every payment transaction hash is single-use across all paid routes.
+  contact:
+    name: AQB Foundation
+    url: https://agentqubit.pages.dev
+  license:
+    name: MIT
+    url: https://github.com/yss787976-ai/agent-coin/blob/main/LICENSE
+servers:
+  - url: https://agentqubit.pages.dev
+    description: Production Cloudflare Pages proxy to the aqb-x402 Worker
+security: []
+tags:
+  - name: x402
+    description: HTTP 402 payment flow and free on-chain stats for AQB on Base.
+paths:
+  /a2a/card:
+    get:
+      operationId: getAgentCard
+      summary: Get the live AQB agent card (paid, 0.01 AQB)
+      description: |
+        Returns the AQB x402 agent card: identity, endpoint, accepted payment
+        rails, price and post-quantum parameters.
+
+        Without a payment header the endpoint returns HTTP 402. The body
+        contains the exact terms in `accepts[]`, including `payTo`,
+        `maxAmountRequired` and `instructions`. The same values are also
+        returned in response headers `x-aqb-token`, `x-aqb-chain`,
+        `x-aqb-price`, `x-aqb-payto`, `x-aqb-accept`, `x-aqb-usdc-price`
+        and `x-aqb-resource`.
+
+        AQB rail: transfer at least 0.01 AQB (10000000000000000 base units,
+        18 decimals) to the advertised `payTo` on Base, then retry with
+        `X-AQB-Tx: <txHash>`. The Worker checks the receipt status, token
+        address, Transfer event, recipient and amount.
+
+        USDC rail: transfer 0.01 USDC (10000 base units, 6 decimals) to the
+        advertised USDC `payTo`, then retry with `X-PAYMENT` containing a
+        base64-encoded JSON object with `payload.txHash`.
+
+        A transaction hash can be used once. Reuse returns HTTP 402 with
+        `payment already used`.
+      tags:
+        - x402
+      parameters:
+        - name: X-AQB-Tx
+          in: header
+          required: false
+          description: |
+            Base transaction hash of an AQB transfer that pays the 402
+            challenge. Use a 32-byte hex hash prefixed with 0x. Ignored
+            when absent.
+          schema:
+            type: string
+            pattern: '^0x[0-9a-fA-F]{64}$'
+        - name: X-PAYMENT
+          in: header
+          required: false
+          description: |
+            Base64-encoded JSON for the USDC rail. Must contain
+            `payload.txHash` pointing at a Base USDC transfer that pays the
+            challenge. Do not send both X-AQB-Tx and X-PAYMENT in one request.
+          schema:
+            type: string
+            description: Base64-encoded JSON. Decodes to an object whose payload.txHash is the Base USDC transfer hash.
+      responses:
+        '200':
+          description: Agent card returned after successful payment verification.
+          headers:
+            x-aqb-paid:
+              description: Transaction hash accepted for the AQB rail.
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                  - aqb
+                  - name
+                  - skill
+                  - endpoint
+                  - x402
+                  - pq
+                  - kem
+                  - pay
+                  - price
+                  - priceUSDC
+                  - accepts
+                  - network
+                  - chainId
+                properties:
+                  aqb:
+                    type: integer
+                    enum: [1]
+                    description: AQB card major version.
+                  name:
+                    type: string
+                    example: aqb-x402
+                  skill:
+                    type: string
+                    example: paid agent discovery, quote, and x402 settlement demo
+                  endpoint:
+                    type: string
+                    format: uri
+                    example: https://agentqubit.pages.dev/a2a/card
+                  x402:
+                    type: string
+                    format: uri
+                    example: https://agentqubit.pages.dev/x402/pay
+                  pq:
+                    type: string
+                    example: ML-DSA-65
+                  kem:
+                    type: string
+                    example: ML-KEM-768
+                  pay:
+                    type: string
+                    description: AQB payment address in `aqb:0x...` form.
+                    example: aqb:0x9ea52810f31768b1886cba9eaf917f4152f53042
+                  price:
+                    type: object
+                    required: [unit, amount, per]
+                    properties:
+                      unit:
+                        type: string
+                        enum: [AQB]
+                      amount:
+                        type: string
+                        description: Price in AQB base units (18 decimals).
+                        example: '10000000000000000'
+                      per:
+                        type: string
+                        example: card
+                  priceUSDC:
+                    type: object
+                    required: [unit, amount, per]
+                    properties:
+                      unit:
+                        type: string
+                        enum: [USDC]
+                      amount:
+                        type: string
+                        description: Price in USDC base units (6 decimals).
+                        example: '10000'
+                      per:
+                        type: string
+                        example: card
+                  accepts:
+                    type: array
+                    items:
+                      type: string
+                      enum: [aqb, usdc]
+                  network:
+                    type: string
+                    example: base
+                  chainId:
+                    type: integer
+                    example: 8453
+              example:
+                aqb: 1
+                name: aqb-x402
+                skill: paid agent discovery, quote, and x402 settlement demo
+                endpoint: https://agentqubit.pages.dev/a2a/card
+                x402: https://agentqubit.pages.dev/x402/pay
+                pq: ML-DSA-65
+                kem: ML-KEM-768
+                pay: aqb:0x9ea52810f31768b1886cba9eaf917f4152f53042
+                price:
+                  unit: AQB
+                  amount: '10000000000000000'
+                  per: card
+                priceUSDC:
+                  unit: USDC
+                  amount: '10000'
+                  per: card
+                accepts:
+                  - aqb
+                  - usdc
+                network: base
+                chainId: 8453
+        '402':
+          description: |
+            Payment required. The body carries both rails. The headers carry
+            the AQB rail terms and are exposed for browser and tool clients.
+          headers:
+            x-aqb-token:
+              description: AQB ERC-20 token address on Base.
+              schema:
+                type: string
+            x-aqb-chain:
+              description: EVM chain ID (8453 for Base mainnet).
+              schema:
+                type: string
+                example: '8453'
+            x-aqb-price:
+              description: AQB price in base units (18 decimals).
+              schema:
+                type: string
+                example: '10000000000000000'
+            x-aqb-payto:
+              description: AQB payee address.
+              schema:
+                type: string
+            x-aqb-accept:
+              description: Comma-separated accepted rails.
+              schema:
+                type: string
+                example: aqb,usdc
+            x-aqb-usdc-price:
+              description: USDC price in base units (6 decimals).
+              schema:
+                type: string
+                example: '10000'
+            x-aqb-resource:
+              description: Resource path that requires payment.
+              schema:
+                type: string
+                example: /a2a/card
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [error, resource, accepts]
+                properties:
+                  error:
+                    type: string
+                    example: payment required
+                  resource:
+                    type: string
+                    example: /a2a/card
+                  accepts:
+                    type: array
+                    items:
+                      type: object
+                      required:
+                        - resource
+                        - scheme
+                        - network
+                        - asset
+                        - payTo
+                        - maxAmountRequired
+                        - unit
+                        - instructions
+                      properties:
+                        resource:
+                          type: string
+                          format: uri
+                        description:
+                          type: string
+                        mimeType:
+                          type: string
+                        maxTimeoutSeconds:
+                          type: integer
+                        scheme:
+                          type: string
+                          enum: [aqb, exact]
+                        network:
+                          type: string
+                          example: base
+                        chainId:
+                          type: integer
+                          example: 8453
+                        asset:
+                          type: string
+                          pattern: '^0x[0-9a-fA-F]{40}$'
+                        payTo:
+                          type: string
+                          pattern: '^0x[0-9a-fA-F]{40}$'
+                        maxAmountRequired:
+                          type: string
+                          description: Amount in the asset's base units.
+                        unit:
+                          type: string
+                          enum: [AQB, USDC]
+                        instructions:
+                          type: string
+                        extra:
+                          type: object
+                          additionalProperties: true
+                  discovery:
+                    type: string
+                    format: uri
+              example:
+                error: payment required
+                resource: /a2a/card
+                accepts:
+                  - resource: https://agentqubit.pages.dev/a2a/card
+                    description: AQB paid agent resource
+                    mimeType: application/json
+                    maxTimeoutSeconds: 300
+                    scheme: aqb
+                    network: base
+                    chainId: 8453
+                    asset: '0x2c54f202b565086b6d8d2226edb67ac3e14c39d1'
+                    payTo: '0x9ea52810f31768b1886cba9eaf917f4152f53042'
+                    maxAmountRequired: '10000000000000000'
+                    unit: AQB
+                    instructions: 'Transfer at least 0.01 AQB to 0x9ea52810f31768b1886cba9eaf917f4152f53042 on Base, then retry with X-AQB-Tx: <txHash>.'
+                  - resource: https://agentqubit.pages.dev/a2a/card
+                    description: AQB paid agent resource
+                    mimeType: application/json
+                    maxTimeoutSeconds: 300
+                    scheme: exact
+                    network: eip155:8453
+                    asset: '0x833589fcd6edb6e08f4c7c32d4f71b54bda02913'
+                    payTo: '0x9ea52810f31768b1886cba9eaf917f4152f53042'
+                    maxAmountRequired: '10000'
+                    unit: USDC
+                    extra:
+                      name: USD Coin
+                      version: '2'
+                    instructions: Transfer at least 0.01 USDC to 0x9ea52810f31768b1886cba9eaf917f4152f53042 on Base, then retry with X-PAYMENT (base64 JSON containing payload.txHash).
+                discovery: https://agentqubit.pages.dev/.well-known/agent-coin.json
+        '500':
+          description: Upstream RPC or verification failure.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+      x-aqb-payment:
+        scheme: aqb
+        network: base
+        chainId: 8453
+        asset: '0x2c54f202b565086b6d8d2226edb67ac3e14c39d1'
+        payTo: '0x9ea52810f31768b1886cba9eaf917f4152f53042'
+        amount: '10000000000000000'
+        amountHuman: '0.01'
+        unit: AQB
+        decimals: 18
+        header: X-AQB-Tx
+        replayProtection: single-use transaction hash
+        alternative:
+          scheme: exact
+          network: eip155:8453
+          asset: '0x833589fcd6edb6e08f4c7c32d4f71b54bda02913'
+          payTo: '0x9ea52810f31768b1886cba9eaf917f4152f53042'
+          amount: '10000'
+          amountHuman: '0.01'
+          unit: USDC
+          decimals: 6
+          header: X-PAYMENT
+          encoding: base64 JSON with payload.txHash
+  /stats:
+    get:
+      operationId: getStats
+      summary: Get live AQB supply, vault, pool and agent stats (free)
+      description: |
+        Free endpoint. Reads Base mainnet through the aqb-x402 Worker. If the
+        live RPC read fails, the Worker serves the last published snapshot and
+        marks the response with `x-aqb-stats: snapshot`. No payment header is
+        required. Values are returned as decimal strings to avoid precision
+        loss in JSON consumers.
+      tags:
+        - x402
+      responses:
+        '200':
+          description: Live on-chain stats, or a snapshot fallback.
+          headers:
+            x-aqb-stats:
+              description: Present with value `snapshot` when the live RPC read failed.
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                  - aqb
+                  - chainId
+                  - asOf
+                  - token
+                  - registry
+                  - pool
+                  - payee
+                  - usdc
+                  - usdcPayee
+                  - decimals
+                  - totalSupplyAQB
+                  - founderAQB
+                  - circulatingAQB
+                  - vaultUSDC
+                  - collateralRatio
+                  - agents
+                  - poolReserves
+                  - pq
+                properties:
+                  aqb:
+                    type: integer
+                    enum: [1]
+                  chainId:
+                    type: integer
+                    example: 8453
+                  asOf:
+                    type: string
+                    format: date-time
+                  token:
+                    type: string
+                    pattern: '^0x[0-9a-fA-F]{40}$'
+                  registry:
+                    type: string
+                    pattern: '^0x[0-9a-fA-F]{40}$'
+                  pool:
+                    type: string
+                    pattern: '^0x[0-9a-fA-F]{40}$'
+                  payee:
+                    type: string
+                    pattern: '^0x[0-9a-fA-F]{40}$'
+                  usdc:
+                    type: string
+                    pattern: '^0x[0-9a-fA-F]{40}$'
+                  usdcPayee:
+                    type: string
+                    pattern: '^0x[0-9a-fA-F]{40}$'
+                  decimals:
+                    type: integer
+                    example: 18
+                  totalSupplyAQB:
+                    type: string
+                  founderAQB:
+                    type: string
+                  circulatingAQB:
+                    type: string
+                  vaultUSDC:
+                    type: string
+                  collateralRatio:
+                    type: string
+                  agents:
+                    type: string
+                    description: Number of registered agents, as a decimal string.
+                    example: '22'
+                  poolReserves:
+                    type: object
+                    required: [aqb, usdc]
+                    properties:
+                      aqb:
+                        type: string
+                      usdc:
+                        type: string
+                  poolPriceUSDC:
+                    type: string
+                    description: Uniswap V2 pool price in USDC, six decimals.
+                    example: '1.000000'
+                  pq:
+                    type: object
+                    required: [signature, kem, mode, verifier]
+                    properties:
+                      signature:
+                        type: string
+                        example: ML-DSA-65
+                      kem:
+                        type: string
+                        example: ML-KEM-768
+                      mode:
+                        type: string
+                        example: '0x02'
+                      verifier:
+                        type: string
+                        pattern: '^0x[0-9a-fA-F]{40}$'
+              example:
+                aqb: 1
+                chainId: 8453
+                asOf: '2026-11-14T14:21:42.627Z'
+                token: '0x2c54f202b565086b6d8d2226edb67ac3e14c39d1'
+                registry: '0xaa964f6ea767f0d709b268abbfdd8b6c2beef3eb'
+                pool: '0xf61cb078f87425933741dd7d02f5779c030db1a6'
+                payee: '0x9ea52810f31768b1886cba9eaf917f4152f53042'
+                usdc: '0x833589fcd6edb6e08f4c7c32d4f71b54bda02913'
+                usdcPayee: '0x9ea52810f31768b1886cba9eaf917f4152f53042'
+                decimals: 18
+                totalSupplyAQB: '73999999740.59'
+                founderAQB: '73999999493.444353112704348586'
+                circulatingAQB: '247.145646887295651414'
+                vaultUSDC: '284.99'
+                collateralRatio: '1.153126'
+                agents: '22'
+                poolReserves:
+                  aqb: '241.52363550733669044'
+                  usdc: '241.523633'
+                poolPriceUSDC: '1.000000'
+                pq:
+                  signature: ML-DSA-65
+                  kem: ML-KEM-768
+                  mode: '0x02'
+                  verifier: '0xa11eE20877a7618ff417f79A026186A9253C0b30'
+        '500':
+          description: Upstream RPC failure and no snapshot available.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string

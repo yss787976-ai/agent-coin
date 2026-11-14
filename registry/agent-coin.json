@@ -44,11 +44,13 @@
   },
   "services": {
     "x402": {
-      "scheme": "aqb",
+      "scheme": "aqb,usdc-exact",
       "paid": "https://agentqubit.pages.dev/a2a/card",
       "price": "0.01",
       "unit": "AQB",
+      "usdc": "0.01",
       "header": "X-AQB-Tx",
+      "usdcHeader": "X-PAYMENT",
       "free": ["https://agentqubit.pages.dev/stats"],
       "faucet": "https://agentqubit.pages.dev/faucet"
     },

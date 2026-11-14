@@ -2,8 +2,7 @@
 // Register the plugin in your character's plugins array and set AQB_KEY.
 import { parseUnits } from "ethers";
 import { AqbAgent } from "@aqb-foundation/aqb-agent/client";
-
-const PAY_RE = /\bpay\s+(\d+(?:\.\d+)?)\s*AQB\s+to\s+(0x[0-9a-fA-F]{40})\b/i;
+import { parsePayCommand } from "./parse.mjs";
 
 function makeAgent(runtime) {
   const key =
@@ -30,15 +29,14 @@ export const aqbPlugin = {
       name: "AQB_PAY",
       similes: ["PAY_AGENT_AQB", "SEND_AQB", "AQB_TRANSFER"],
       description: "Pay a registered AQB agent. Example: pay 0.25 AQB to 0xAgentAddress",
-      validate: async (_runtime, message) => PAY_RE.test(message?.content?.text || ""),
+      validate: async (_runtime, message) => !!parsePayCommand(message?.content?.text),
       handler: async (runtime, message, _state, _options, callback) => {
-        const text = message?.content?.text || "";
-        const m = text.match(PAY_RE);
-        if (!m) {
+        const parsed = parsePayCommand(message?.content?.text);
+        if (!parsed) {
           await callback?.({ text: "Usage: pay <amount> AQB to <0x address>" });
           return false;
         }
-        const [, amount, to] = m;
+        const { amount, to } = parsed;
         try {
           const me = makeAgent(runtime);
           if (!(await me.isAgent(to))) {

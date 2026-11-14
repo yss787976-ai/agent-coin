@@ -1,0 +1,64 @@
+name: aqb-x402
+display_name: AQB x402 Agent Tools
+version: 1.0.0
+description: >-
+  Dify tool provider for the live AQB x402 service on Base mainnet. Exposes
+  a paid agent-card lookup with 0.01 AQB (or 0.01 USDC) x402 settlement and a
+  free live-stats operation.
+author: AQB Foundation
+homepage: https://agentqubit.pages.dev
+repository: https://github.com/yss787976-ai/agent-coin
+license: MIT
+type: openapi
+openapi: ./openapi.yaml
+server: https://agentqubit.pages.dev
+auth: none
+transport: http
+tags:
+  - finance
+  - blockchain
+  - payments
+  - x402
+  - base
+tools:
+  - name: get_agent_card
+    operation_id: getAgentCard
+    method: GET
+    path: /a2a/card
+    description: >-
+      Fetch the live AQB agent card. Unpaid calls return HTTP 402 with both
+      payment rails; pay 0.01 AQB on Base and retry with the X-AQB-Tx header,
+      or pay 0.01 USDC and retry with X-PAYMENT.
+    auth: none
+    paid: true
+    payment:
+      required: true
+      scheme: aqb
+      network: base
+      chainId: 8453
+      asset: '0x2c54f202b565086b6d8d2226edb67ac3e14c39d1'
+      payTo: '0x9ea52810f31768b1886cba9eaf917f4152f53042'
+      amount: '10000000000000000'
+      amount_human: '0.01'
+      unit: AQB
+      decimals: 18
+      retry_header: X-AQB-Tx
+      alternative:
+        scheme: exact
+        network: eip155:8453
+        asset: '0x833589fcd6edb6e08f4c7c32d4f71b54bda02913'
+        payTo: '0x9ea52810f31768b1886cba9eaf917f4152f53042'
+        amount: '10000'
+        amount_human: '0.01'
+        unit: USDC
+        decimals: 6
+        retry_header: X-PAYMENT
+  - name: get_stats
+    operation_id: getStats
+    method: GET
+    path: /stats
+    description: >-
+      Read live AQB supply, vault backing, Uniswap pool reserves, collateral
+      ratio, registered-agent count and post-quantum parameters. Free.
+    auth: none
+    paid: false
