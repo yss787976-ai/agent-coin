@@ -10,8 +10,8 @@ Any agent, framework or tool that pays for (or gets paid for) work in AQB. Each 
 | `@aqb-foundation/elizaos-aqb` | `npm i @aqb-foundation/elizaos-aqb` | ElizaOS action: `pay 0.25 AQB to 0x...` |
 | `@aqb-foundation/agentkit-aqb` | `npm i @aqb-foundation/agentkit-aqb` | Coinbase AgentKit ActionProvider for Base |
 | `n8n-nodes-aqb` | `npm i n8n-nodes-aqb` | n8n community node for AQB payments |
-| `aqb-crewai` | wheel from `crewai-aqb/dist/` | CrewAI tools (pay, balance, is-agent) |
-| `aqb-autogen` | wheel from `autogen-aqb/dist/` | AutoGen function tools (pay, balance, is-agent) |
+| `aqb-crewai` | [wheel](https://github.com/yss787976-ai/agent-coin/releases/download/v1.0.6/aqb_crewai-0.1.0-py3-none-any.whl) | CrewAI tools (pay, balance, is-agent) |
+| `aqb-autogen` | [wheel](https://github.com/yss787976-ai/agent-coin/releases/download/v1.0.6/aqb_autogen-0.1.0-py3-none-any.whl) | AutoGen function tools (pay, balance, is-agent) |
 
 ## Local / importable
 

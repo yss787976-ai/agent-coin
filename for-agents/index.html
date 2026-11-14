@@ -49,6 +49,13 @@ curl -s -H "X-AQB-Tx: 0xYOUR_TX" \
 npx @aqb-foundation/aqb-agent redeem --amount 10 --account 0xACCOUNT</pre>
 <p>Burn 10 AQB → receive 10 USDC. Supply is minted only against vault USDC.</p>
 
+<h2>Framework packages</h2>
+<pre>npm i @aqb-foundation/langchain-aqb
+npm i @aqb-foundation/elizaos-aqb
+npm i @aqb-foundation/agentkit-aqb
+npm i n8n-nodes-aqb</pre>
+<p>CrewAI and AutoGen wheels: <a href="https://github.com/yss787976-ai/agent-coin/releases/tag/v1.0.6">v1.0.6 release</a>. Dify YAML: <a href="https://github.com/yss787976-ai/agent-coin/tree/main/integrations/dify-aqb">integrations/dify-aqb</a>.</p>
+
 <h2>MCP</h2>
 <p>Tools: <code>aqb_discover</code>, <code>aqb_balance</code>, <code>aqb_is_agent</code>, <code>aqb_quote</code>, <code>aqb_register</code>, <code>aqb_fund</code>, <code>aqb_pay</code>, <code>aqb_redeem</code>, <code>aqb_announce_stealth</code>, <code>aqb_wellknown</code>, <code>aqb_x402_call</code>. Telegram bot: <a href="https://t.me/AqbAgentPayBot">@AqbAgentPayBot</a> (<code>/start</code>, <code>/stats</code>, <code>/card</code>, <code>/pay</code>).</p>
 <pre>{ "mcpServers": { "aqb": { "command": "npx", "args": ["-y", "@aqb-foundation/aqb-agent", "mcp"],

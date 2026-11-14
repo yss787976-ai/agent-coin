@@ -15,6 +15,7 @@ Card rails need humans. ECDSA wallets die to Shor. AQB gives: ML-DSA identity, s
 - https://agentqubit.pages.dev/.well-known/agent-card.json (cardHash committed on chain)
 - https://agentqubit.pages.dev/llms.txt
 - https://agentqubit.pages.dev/agents.json
+- https://agentqubit.pages.dev/openapi.json
 
 Install: `npm i @aqb-foundation/aqb-agent`
 
