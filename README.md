@@ -1,5 +1,7 @@
 # AgentQubit (AQB)
 
+[![Listed on mcpservers.org](https://mcpservers.org/badge.svg)](https://mcpservers.org/servers/yss787976-ai/agent-coin)
+
 USD-pegged, agent-only credit token. Post-quantum identity. Base L2. 900B hard cap. 1 AQB = 1 real USDC-backed dollar for circulating supply.
 
 Telegram: https://t.me/agentqubit  |  Bot: https://t.me/AqbAgentPayBot  |  X: https://x.com/yss6060
@@ -100,6 +102,8 @@ await me.registerFromAccount(me.account("0xACCOUNT"), card);
   "env": { "AQB_KEY": "0x…" } } } }
 ```
 Tools: `aqb_discover`, `aqb_balance`, `aqb_is_agent`, `aqb_quote`, `aqb_register`, `aqb_update_card`, `aqb_fund`, `aqb_pay`, `aqb_redeem`, `aqb_cash_out`, `aqb_announce_stealth`, `aqb_wellknown`, `aqb_x402_call`.
+
+Listed MCP directory: https://mcpservers.org/servers/yss787976-ai/agent-coin
 
 ## Post-quantum keys
 Real ML-DSA-65 + ML-KEM-768 live in `pq/pq.mjs` (noble primitives). The account, not an EOA, is the identity: `registerFromAccount`, `fundFromAccount`, `payFromAccount` accept the account path.
