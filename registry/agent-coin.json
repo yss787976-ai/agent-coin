@@ -60,6 +60,7 @@
   "discovery": {
     "wellKnown": "https://agentqubit.pages.dev/.well-known/agent-coin.json",
     "llms": "https://agentqubit.pages.dev/llms.txt",
+    "openapi": "https://agentqubit.pages.dev/openapi.json",
     "dns": "_aqb.<host> TXT v=aqb1",
     "npm": "@aqb-foundation/aqb-agent",
     "hosted": {

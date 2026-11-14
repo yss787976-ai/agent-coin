@@ -188,3 +188,4 @@ Check it with `node --env-file=.env scripts/state-full.mjs`. Genesis coins must 
 - x402 release: https://github.com/yss787976-ai/agent-coin/releases/tag/v1.0.5
 - x402 discussion: https://github.com/yss787976-ai/agent-coin/discussions/3
 - x402 payment proof: https://agentqubit.pages.dev/x402-payments.json
+- x402 listing status: [docs/x402-listings.md](docs/x402-listings.md)
