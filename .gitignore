@@ -14,6 +14,7 @@ deployer.secret.json
 seed/wallets.json
 seed/onboard-*.json
 seed/telegram-storage.json
+seed/x402-list-request.json
 HANDOFF-AR.md
 BACKUP-README.txt
 tok.json

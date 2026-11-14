@@ -1,8 +1,8 @@
 {
   "aqb": 1,
   "chainId": 8453,
-  "asOf": "2026-11-14T14:39:47.504Z",
-  "block": 57384059,
+  "asOf": "2026-11-14T15:45:25.011Z",
+  "block": 57403746,
   "token": "0x2C54F202B565086B6d8D2226Edb67AC3E14C39d1",
   "registry": "0xAa964f6ea767f0D709b268abBFdd8B6C2Beef3eB",
   "pool": "0xF61Cb078f87425933741Dd7d02F5779c030dB1A6",
@@ -17,10 +17,10 @@
   "collateralRatio": "1.153126",
   "agents": "22",
   "poolReserves": {
-    "aqb": "241.52363550733669044",
-    "usdc": "241.523633"
+    "aqb": "242.57363550733669044",
+    "usdc": "240.481307"
   },
-  "poolPriceUSDC": "1.000000",
+  "poolPriceUSDC": "0.991374",
   "pq": {
     "signature": "ML-DSA-65",
     "kem": "ML-KEM-768",

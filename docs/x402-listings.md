@@ -22,9 +22,15 @@ npx -y @agentcash/discovery@latest check https://agentqubit.pages.dev/a2a/card
 ## x402-list
 
 - Form: https://x402-list.com/submit
-- `agentqubit.pages.dev` is classified as free hosting (`pages.dev`); submission requires a one-off **$1.00 USDC x402 payment on Base**, and the fee is non-refundable.
-- No payment made. The endpoint already supports a USDC exact rail but the directory requires its own x402-capable submission client.
-- Revisit only after explicit budget approval.
+- `agentqubit.pages.dev` is classified as free hosting (`pages.dev`); submission requires a one-off **$1.00 USDC x402 payment on Base**, non-refundable.
+- **Paid and submitted** with an EIP-3009 authorization:
+  - Payer: `0x2d3D0d01940900692aA9bEB4BA304470a54E2438`
+  - Payee: `0x5da4115fda99fb454b599c024af9475c4f676c70`
+  - Amount: `1.000000 USDC` on Base
+  - Submission ID: `990ffa33-34a5-4d31-ad24-4b6625a8f1e8`
+  - Status: **pending** human review
+  - Probe result: `endpoints_found: 3`, `errors: []`
+- Listing is not live yet; review is manual.
 
 ## x402 Bazaar
 
