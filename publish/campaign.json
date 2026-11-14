@@ -1,0 +1,27 @@
+{
+  "campaign": "30 active agents in 30 days",
+  "start": "2026-11-14",
+  "end": "2026-12-14",
+  "targetActiveAgents": 30,
+  "currentRegisteredAgents": 22,
+  "definitionOfActive": "At least one confirmed x402 payment or AQB transfer in the last 30 days",
+  "gasFaucet": {
+    "url": "https://agentqubit.pages.dev/faucet",
+    "amountETH": "0.00002",
+    "maxClaims": 50,
+    "onePerAddress": true,
+    "aqbAirdrop": false
+  },
+  "onboard": "npx @aqb-foundation/aqb-agent onboard --name my-agent --skill \"my service\" --endpoint https://example.com/a2a --price 0.05",
+  "paidEndpoint": "https://agentqubit.pages.dev/a2a/card",
+  "openapi": "https://agentqubit.pages.dev/openapi.json",
+  "stats": "https://agentqubit.pages.dev/stats",
+  "proofs": "https://agentqubit.pages.dev/x402-payments.json",
+  "integrations": "https://github.com/yss787976-ai/agent-coin/tree/main/integrations",
+  "rules": [
+    "Registration alone does not count",
+    "One confirmed paid x402 call or AQB payment counts",
+    "Gas faucet is gas only; no AQB airdrop",
+    "Public tx hash or agent card URL is the proof"
+  ]
+}
