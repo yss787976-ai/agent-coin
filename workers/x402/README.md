@@ -16,7 +16,8 @@ The Pages `_worker.js` proxies `/a2a/card`, `/quote`, `/x402/pay`, and `/stats` 
 | `GET /a2a/card` | 0.01 AQB | agent card / discovery payload |
 | `GET /quote?amount=1` | 0.001 AQB | vault + Uniswap V2 quote |
 | `GET /x402/pay` | 0.001 AQB | generic paid resource |
-| `POST /tg/webhook` | free | Telegram bot webhook (`/start`, `/stats`, `/card`, `/pay`, `/help`) |
+| `POST /tg/webhook` | free | Telegram bot webhook (`/start`, `/stats`, `/card`, `/pay`, `/faucet`, `/help`) |
+| `GET/POST /faucet` | free | Base ETH gas faucet: 0.00002 ETH, once per address, first 50 |
 
 ## Flow
 
@@ -55,7 +56,9 @@ Local `wrangler dev` verification with this tx:
 - `AQB_POOL=0xF61Cb078f87425933741Dd7d02F5779c030dB1A6`
 - `BASE_RPC=https://mainnet.base.org`
 - Durable Object binding `REPLAY` → class `Replay`
-- Secrets: `TG_TOKEN` (BotFather token), `TG_WEBHOOK_SECRET` (Telegram webhook secret)
+- Secrets: `TG_TOKEN` (BotFather token), `TG_WEBHOOK_SECRET` (Telegram webhook secret), `FAUCET_KEY` (low-balance ETH hot wallet)
+- `FAUCET_AMOUNT=0.00002`, `FAUCET_MAX=50`
+- Durable Object `FAUCET` reserves one claim per address; the hot wallet holds only ~0.0012 ETH
 
 The Worker holds **no private keys**. It only reads Base RPC and verifies receipts. The Telegram webhook only sends read-only stats and links; it never signs or moves funds.
 

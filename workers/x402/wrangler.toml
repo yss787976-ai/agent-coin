@@ -1,6 +1,7 @@
 name = "aqb-x402"
 main = "src/index.mjs"
 compatibility_date = "2026-11-01"
+compatibility_flags = ["nodejs_compat"]
 
 [vars]
 AQB_CHAIN_ID = "8453"
@@ -11,11 +12,21 @@ AQB_POOL = "0xF61Cb078f87425933741Dd7d02F5779c030dB1A6"
 BASE_RPC = "https://mainnet.base.org"
 BASE_RPC_FALLBACK = "https://base.llamarpc.com"
 AQB_PUBLIC_ORIGIN = "https://agentqubit.pages.dev"
+FAUCET_AMOUNT = "0.00002"
+FAUCET_MAX = "50"
 
 [[durable_objects.bindings]]
 name = "REPLAY"
 class_name = "Replay"
 
+[[durable_objects.bindings]]
+name = "FAUCET"
+class_name = "Faucet"
+
 [[migrations]]
 tag = "v1"
 new_sqlite_classes = ["Replay"]
+
+[[migrations]]
+tag = "v2"
+new_sqlite_classes = ["Faucet"]

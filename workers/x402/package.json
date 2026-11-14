@@ -7,6 +7,9 @@
     "dev": "wrangler dev",
     "deploy": "wrangler deploy"
   },
+  "dependencies": {
+    "ethers": "^6.17.0"
+  },
   "devDependencies": {
     "wrangler": "^4.0.0"
   }

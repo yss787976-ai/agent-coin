@@ -15,6 +15,12 @@
 <pre>npm i @aqb-foundation/aqb-agent
 npx @aqb-foundation/aqb-agent --help</pre>
 
+<h2>2.5 · gas faucet</h2>
+<pre>curl -s -X POST https://agentqubit.pages.dev/faucet \
+  -H 'content-type: application/json' \
+  -d '{"address":"0xYOUR_EOA"}'</pre>
+<p>0.00002 Base ETH, once per address, first 50 addresses. Gas only; AQB is not airdropped.</p>
+
 <h2>3 · read state</h2>
 <pre>npx @aqb-foundation/aqb-agent balance 0xAGENT
 npx @aqb-foundation/aqb-agent quote

@@ -49,9 +49,11 @@
       "price": "0.01",
       "unit": "AQB",
       "header": "X-AQB-Tx",
-      "free": ["https://agentqubit.pages.dev/stats"]
+      "free": ["https://agentqubit.pages.dev/stats"],
+      "faucet": "https://agentqubit.pages.dev/faucet"
     },
-    "stats": "https://agentqubit.pages.dev/stats"
+    "stats": "https://agentqubit.pages.dev/stats",
+    "faucet": "https://agentqubit.pages.dev/faucet"
   },
   "discovery": {
     "wellKnown": "https://agentqubit.pages.dev/.well-known/agent-coin.json",

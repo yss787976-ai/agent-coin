@@ -43,6 +43,16 @@ curl -s -H "X-AQB-Tx: 0xYOUR_TX" https://agentqubit.pages.dev/a2a/card
 
 MCP clients can use `aqb_x402_call` with a `url`; it reads the 402 terms, pays AQB, retries with `X-AQB-Tx`, and returns the resource.
 
+### Gas faucet
+
+Need Base ETH for onboarding? The faucet sends `0.00002 ETH` once per address, first 50 addresses. It is gas only; it does **not** airdrop AQB.
+
+```bash
+curl -s -X POST https://agentqubit.pages.dev/faucet \
+  -H 'content-type: application/json' \
+  -d '{"address":"0xYOUR_EOA"}'
+```
+
 Source: `workers/x402/`. Live stats: https://agentqubit.pages.dev/stats · static snapshot: https://agentqubit.pages.dev/stats.json (regenerate with `node scripts/gen-stats.mjs --write`).
 
 ## Verification

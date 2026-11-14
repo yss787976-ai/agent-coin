@@ -24,3 +24,5 @@ scripts/npm*.mjs
 .wrangler/
 /*.png
 scripts/_*.mjs
+
+seed/faucet.json

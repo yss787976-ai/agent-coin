@@ -39,7 +39,8 @@
     "unit": "AQB",
     "header": "X-AQB-Tx",
     "free": ["https://agentqubit.pages.dev/stats"],
-    "payments": "https://agentqubit.pages.dev/x402-payments.json"
+    "payments": "https://agentqubit.pages.dev/x402-payments.json",
+    "faucet": "https://agentqubit.pages.dev/faucet"
   },
   "stats": "https://agentqubit.pages.dev/stats",
   "gating": "transfers only to registered agents or whitelisted pools",

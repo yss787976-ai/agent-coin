@@ -9,6 +9,8 @@
 //   GET /quote         paid 0.001 AQB (vault + Uniswap V2 quote)
 //   GET /x402/pay      paid 0.001 AQB (generic paid resource)
 
+import { JsonRpcProvider, Wallet, parseEther } from "ethers";
+
 const TRANSFER_TOPIC =
   "0xddf252ad1be2c89b69c2b068fc378daa952ba7f163c4a11628f55a4df523b3ef";
 const SEL_GET_RESERVES = "0x0902f1ac";
@@ -248,6 +250,76 @@ export class Replay {
   }
 }
 
+export class Faucet {
+  constructor(state, env) {
+    this.state = state;
+    this.env = env;
+  }
+
+  async fetch(request) {
+    const url = new URL(request.url);
+    const { address } = await request.json();
+    if (!address) return new Response("bad address", { status: 400 });
+    const key = address.toLowerCase();
+    if (url.pathname === "/reserve") {
+      if (await this.state.storage.get(key)) return new Response("already claimed", { status: 409 });
+      if (await this.state.storage.get("pending:" + key)) return new Response("claim pending", { status: 409 });
+      const count = Number((await this.state.storage.get("count")) || 0);
+      const max = Number(this.env.FAUCET_MAX || 50);
+      if (count >= max) return new Response("faucet empty", { status: 429 });
+      await this.state.storage.put("pending:" + key, Date.now());
+      return new Response("reserved");
+    }
+    if (url.pathname === "/confirm") {
+      const count = Number((await this.state.storage.get("count")) || 0);
+      await this.state.storage.put(key, Date.now());
+      await this.state.storage.delete("pending:" + key);
+      await this.state.storage.put("count", count + 1);
+      return new Response("confirmed");
+    }
+    if (url.pathname === "/release") {
+      await this.state.storage.delete("pending:" + key);
+      return new Response("released");
+    }
+    return new Response("not found", { status: 404 });
+  }
+}
+
+async function faucetSend(env, address) {
+  if (!env.FAUCET_KEY) throw new Error("faucet not configured");
+  const amount = parseEther(env.FAUCET_AMOUNT || "0.00002");
+  const urls = [
+    CFG(env).rpc,
+    env.BASE_RPC_FALLBACK || "https://base.llamarpc.com",
+    "https://base-rpc.publicnode.com",
+    "https://1rpc.io/base",
+  ].filter((v, i, a) => v && a.indexOf(v) === i);
+  let last;
+  for (const url of urls) {
+    try {
+      const provider = new JsonRpcProvider(url, CFG(env).chainId, { staticNetwork: true });
+      const wallet = new Wallet(env.FAUCET_KEY, provider);
+      const tx = await wallet.sendTransaction({ to: address, value: amount });
+      return tx.hash;
+    } catch (e) {
+      last = e;
+    }
+  }
+  throw last || new Error("faucet RPC unavailable");
+}
+
+async function faucetCall(env, action, address) {
+  if (!env.FAUCET) return { ok: true, skipped: true };
+  const id = env.FAUCET.idFromName("aqb-faucet");
+  const stub = env.FAUCET.get(id);
+  const res = await stub.fetch(`https://faucet/${action}`, {
+    method: "POST",
+    headers: { "content-type": "application/json" },
+    body: JSON.stringify({ address }),
+  });
+  return { ok: res.ok, status: res.status, text: await res.text() };
+}
+
 async function telegramReply(env, chatId, text) {
   if (!env.TG_TOKEN) return { ok: false, error: "TG_TOKEN not configured" };
   const res = await fetch(`https://api.telegram.org/bot${env.TG_TOKEN}/sendMessage`, {
@@ -275,6 +347,7 @@ async function telegramUpdate(env, update) {
       "/stats — live supply, vault, pool, agents",
       "/card — paid x402 agent card (0.01 AQB)",
       "/pay — one-command onboarding and payment",
+      "/faucet — Base ETH gas for your EOA",
       "/help — links",
     ].join("\n");
   } else if (text.startsWith("/stats")) {
@@ -312,6 +385,14 @@ async function telegramUpdate(env, update) {
       "MCP x402: aqb_x402_call(url)",
       "npm 1.0.5",
     ].join("\n");
+  } else if (text.startsWith("/faucet")) {
+    reply = [
+      "Base gas faucet (ETH only):",
+      "POST " + origin + "/faucet",
+      '{"address":"0xYOUR_EOA"}',
+      "0.00002 ETH, once per address, first 50.",
+      "AQB is not airdropped; buy or earn it from an agent.",
+    ].join("\n");
   } else if (text.startsWith("/help") || text.startsWith("/")) {
     reply = [
       "AQB links:",
@@ -320,7 +401,7 @@ async function telegramUpdate(env, update) {
       "npm: https://www.npmjs.com/package/@aqb-foundation/aqb-agent",
       "Repo: https://github.com/yss787976-ai/agent-coin",
       "",
-      "Commands: /start /stats /card /pay /help",
+      "Commands: /start /stats /card /pay /faucet /help",
     ].join("\n");
   } else {
     reply = "Use /help for commands.";
@@ -356,6 +437,37 @@ export default {
     const cfg = CFG(env);
 
     try {
+      if (url.pathname === "/faucet") {
+        const amount = env.FAUCET_AMOUNT || "0.00002";
+        const max = Number(env.FAUCET_MAX || 50);
+        if (request.method === "GET") {
+          return json({
+            ok: true,
+            asset: "ETH",
+            chainId: cfg.chainId,
+            amount,
+            maxClaims: max,
+            note: "Gas only. AQB is not airdropped; buy or earn it from an agent.",
+          }, 200, CORS);
+        }
+        if (request.method !== "POST") return json({ error: "POST only" }, 405, CORS);
+        let body;
+        try { body = await request.json(); } catch { return json({ error: "bad json" }, 400, CORS); }
+        const address = body.address;
+        if (!/^0x[0-9a-fA-F]{40}$/.test(address || "")) return json({ error: "bad address" }, 400, CORS);
+        if (!env.FAUCET_KEY) return json({ error: "faucet not configured" }, 503, CORS);
+        const reserved = await faucetCall(env, "reserve", address);
+        if (!reserved.ok) return json({ error: reserved.text || "not available" }, reserved.status || 429, CORS);
+        try {
+          const tx = await faucetSend(env, address);
+          await faucetCall(env, "confirm", address);
+          return json({ ok: true, address, amount, asset: "ETH", chainId: cfg.chainId, tx }, 200, CORS);
+        } catch (e) {
+          await faucetCall(env, "release", address);
+          throw e;
+        }
+      }
+
       if (url.pathname === "/tg/webhook") {
         if (request.method !== "POST") return json({ error: "POST only" }, 405, CORS);
         if (!env.TG_WEBHOOK_SECRET) return json({ error: "webhook not configured" }, 503, CORS);

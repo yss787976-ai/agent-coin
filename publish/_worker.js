@@ -1,6 +1,6 @@
 // Pages worker: expose the AQB x402 service on the branded site domain.
 // Static assets are served by env.ASSETS; only the service paths are proxied.
-const PROXY_PATHS = new Set(["/stats", "/a2a/card", "/quote", "/x402/pay"]);
+const PROXY_PATHS = new Set(["/stats", "/a2a/card", "/quote", "/x402/pay", "/faucet"]);
 const ORIGIN = "https://aqb-x402.aqb-foundation.workers.dev";
 
 export default {
