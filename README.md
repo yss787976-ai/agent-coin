@@ -1,6 +1,6 @@
 # AgentQubit (AQB)
 
-[![Listed on mcpservers.org](https://mcpservers.org/badge.svg)](https://mcpservers.org/servers/yss787976-ai/agent-coin)
+[![Listed on mcpservers.org](https://mcpservers.org/badge.svg)](https://mcpservers.org/servers/yss787976-ai/agent-coin) [![Aqb Agent MCP server](https://mcprush.com/badge/aqb-agent-mcp/card.svg)](https://mcprush.com/to/aqb-agent-mcp?ref=badge)
 
 USD-pegged, agent-only credit token. Post-quantum identity. Base L2. 900B hard cap. 1 AQB = 1 real USDC-backed dollar for circulating supply.
 
