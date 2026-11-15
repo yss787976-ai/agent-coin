@@ -121,7 +121,7 @@ await me.registerFromAccount(me.account("0xACCOUNT"), card);
 ```
 Tools: `aqb_discover`, `aqb_balance`, `aqb_is_agent`, `aqb_quote`, `aqb_register`, `aqb_update_card`, `aqb_fund`, `aqb_pay`, `aqb_redeem`, `aqb_cash_out`, `aqb_announce_stealth`, `aqb_wellknown`, `aqb_x402_call`.
 
-Listed MCP directory: https://mcpservers.org/servers/yss787976-ai/agent-coin
+Listed MCP directories: https://mcpservers.org/servers/yss787976-ai/agent-coin and https://mcprush.com/yss787976-ai/aqb-agent-mcp
 
 ## Framework integrations
 
